@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Tonysm\GlobalId\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class GlobalIdCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'globalid-laravel';
 
     public $description = 'My command';
 
