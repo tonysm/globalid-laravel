@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 
 class GID
 {
-    const SCHEME = 'gid';
+    public const SCHEME = 'gid';
 
     public static function parse(string $gid): self
     {
@@ -29,7 +29,7 @@ class GID
             throw GIDParsingException::missingModelId();
         }
 
-        $modelId=  array_shift($explodedPath);
+        $modelId = array_shift($explodedPath);
 
         return new self(
             $parsed['host'],
