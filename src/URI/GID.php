@@ -7,19 +7,34 @@ use Illuminate\Support\Str;
 
 class GID
 {
+    const SCHEME = 'gid';
+
     public static function parse(string $gid): self
     {
-        $parsed = parse_url(urldecode($gid));
+        $parsed = parse_url($gid);
 
-        $str = Str::of($parsed['path']);
+        if (false === $parsed || $parsed['scheme'] !== static::SCHEME) {
+            throw GIDParsingException::badUri();
+        }
 
-        $modelName = (string) $str->after('/')->beforeLast('/');
-        $modelId = (string) $str->afterLast('/');
+        $explodedPath = explode('/', trim($parsed['path'], '/'));
+
+        $modelName = array_shift($explodedPath);
+
+        if (empty($modelName)) {
+            throw GIDParsingException::missingPath();
+        }
+
+        if (count($explodedPath) !== 1) {
+            throw GIDParsingException::missingModelId();
+        }
+
+        $modelId=  array_shift($explodedPath);
 
         return new self(
             $parsed['host'],
-            $modelName,
-            $modelId,
+            urldecode($modelName),
+            urldecode($modelId),
         );
     }
 
@@ -53,12 +68,12 @@ class GID
 
     public function toString(): string
     {
-        return urlencode(sprintf(
+        return sprintf(
             'gid://%s/%s/%s',
             $this->app,
-            $this->modelName,
-            $this->modelId,
-        ));
+            urlencode($this->modelName),
+            urlencode($this->modelId),
+        );
     }
 
     public function __toString(): string

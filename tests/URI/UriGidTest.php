@@ -18,7 +18,7 @@ class UriGidTest extends TestCase
     {
         parent::setUp();
 
-        $this->gidString = urlencode('gid://laravel/Tonysm\\GlobalId\\Tests\\Stubs\\Models\\Person/5');
+        $this->gidString = 'gid://laravel/' . urlencode('Tonysm\\GlobalId\\Tests\\Stubs\\Models\\Person'). '/5';
         $this->gid = GID::parse($this->gidString);
     }
 
