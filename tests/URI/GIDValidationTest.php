@@ -25,8 +25,22 @@ class GIDValidationTest extends TestCase
                 'gid' => 'gid://laravel/Person/1/2',
                 'expectedException' => GIDParsingException::class,
             ],
-            // 'empty',
-            // 'invalid schemes',
+            'empty' => [
+                'gid' => 'gid:///',
+                'expectedException' => GIDParsingException::class,
+            ],
+            'invalid schemes http' => [
+                'gid' => 'http://laravel/Person/123',
+                'expectedException' => GIDParsingException::class,
+            ],
+            'invalid schemes gyd' => [
+                'gid' => 'gyd://laravel/Person/123',
+                'expectedException' => GIDParsingException::class,
+            ],
+            'invalid schemes empty' => [
+                'gid' => '//laravel/Person/123',
+                'expectedException' => GIDParsingException::class,
+            ],
         ];
     }
 
@@ -39,10 +53,5 @@ class GIDValidationTest extends TestCase
         $this->expectException($expectedException);
 
         GID::parse($gid);
-    }
-
-    /** @test */
-    public function can_get_pieces()
-    {
     }
 }

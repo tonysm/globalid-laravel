@@ -3,7 +3,7 @@
 namespace Tonysm\GlobalId\URI;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class GID
 {
@@ -13,7 +13,7 @@ class GID
     {
         $parsed = parse_url($gid);
 
-        if (false === $parsed || $parsed['scheme'] !== static::SCHEME) {
+        if (false === $parsed || ! isset($parsed['scheme']) || $parsed['scheme'] !== static::SCHEME) {
             throw GIDParsingException::badUri();
         }
 
@@ -38,9 +38,9 @@ class GID
         );
     }
 
-    public static function create(string $app, Model $model): self
+    public static function create(string $app, Model $model, array $params = []): self
     {
-        return new self($app, $model::class, (string) $model->getKey());
+        return new self($app, $model::class, (string) $model->getKey(), $params);
     }
 
     public static function build($args): self
@@ -49,8 +49,21 @@ class GID
             $args[0] ?? $args['app'],
             $args[1] ?? $args['model_name'],
             $args[2] ?? $args['model_id'],
-            $args[3] ?? $args['params'] ?? [],
+            static::encodeWwwParams($args[3] ?? $args['params'] ?? []),
         );
+    }
+
+    protected static function encodeWwwParams(array $params = []): array
+    {
+        // Multi value params aren't supported. When any param is a
+        // array, we'll return the last item. This is here so we
+        // can get the samed feature parity as the Rails gem.
+
+        foreach ($params as $key => $val) {
+            $params[$key] = is_array($val) ? Arr::last($val) : $val;
+        }
+
+        return $params;
     }
 
     public function __construct(
@@ -66,14 +79,20 @@ class GID
         return $this->toString() === $gid->toString();
     }
 
+    public function getParam($key)
+    {
+        return $this->params[$key];
+    }
+
     public function toString(): string
     {
-        return sprintf(
-            'gid://%s/%s/%s',
+        return trim(sprintf(
+            'gid://%s/%s/%s?%s',
             $this->app,
             urlencode($this->modelName),
             urlencode($this->modelId),
-        );
+            http_build_query($this->params),
+        ), '?');
     }
 
     public function __toString(): string
