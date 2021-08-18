@@ -17,6 +17,10 @@ class GID
             throw GIDParsingException::badUri();
         }
 
+        if (! isset($parsed['host']) || ! ctype_alnum($parsed['host'])) {
+            throw GIDParsingException::invalidHost();
+        }
+
         $explodedPath = explode('/', trim($parsed['path'], '/'));
 
         $modelName = array_shift($explodedPath);
@@ -36,6 +40,11 @@ class GID
             urldecode($modelName),
             urldecode($modelId),
         );
+    }
+
+    public static function validateAppName(string $app): string
+    {
+        return static::parse("gid://{$app}/Model/1")->app;
     }
 
     public static function create(string $app, Model $model, array $params = []): self

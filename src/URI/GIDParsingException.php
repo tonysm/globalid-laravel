@@ -6,6 +6,10 @@ use RuntimeException;
 
 class GIDParsingException extends RuntimeException
 {
+    public static function invalidHost(): self
+    {
+        return new static('Invalid host');
+    }
     public static function badUri(): self
     {
         return new static('Bad URI');

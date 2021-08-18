@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Tonysm\GlobalId\GlobalId;
+use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalIdTest extends TestCase
 {
@@ -12,9 +13,29 @@ class GlobalIdTest extends TestCase
         $this->assertTrue((new GlobalId('gid://app/model/id'))->equalsTo(new GlobalId('gid://app/model/id')));
     }
 
-    /** @test */
-    public function invalid_app_name()
+    public function invalidAppNames()
     {
+        return [
+            'empty name' => [
+                'app_name' => '',
+                'expectedException' => GIDParsingException::class,
+            ],
+            'underscore is invalid' => [
+                'app_name' => 'blog_app',
+                'expectedException' => GIDParsingException::class,
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidAppNames
+     */
+    public function invalid_app_name($app, $expectedException)
+    {
+        $this->expectException($expectedException);
+
+        GlobalId::useAppName($app);
     }
 
     /** @test */
