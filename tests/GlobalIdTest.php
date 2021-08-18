@@ -2,11 +2,14 @@
 
 namespace Tonysm\GlobalId\Tests;
 
+use Tonysm\GlobalId\GlobalId;
+
 class GlobalIdTest extends TestCase
 {
     /** @test */
     public function value_equality()
     {
+        $this->assertTrue((new GlobalId('gid://app/model/id'))->equalsTo(new GlobalId('gid://app/model/id')));
     }
 
     /** @test */
