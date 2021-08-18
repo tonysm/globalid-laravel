@@ -5,6 +5,7 @@ namespace Tonysm\GlobalId;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Tonysm\GlobalId\Commands\GlobalIdCommand;
+use Illuminate\Support\Str;
 
 class GlobalIdServiceProvider extends PackageServiceProvider
 {
@@ -21,5 +22,12 @@ class GlobalIdServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasMigration('create_globalid-laravel_table')
             ->hasCommand(GlobalIdCommand::class);
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
+        GlobalId::useAppName(Str::slug(config('app.name')));
     }
 }

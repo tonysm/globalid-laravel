@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Tonysm\GlobalId\GlobalId;
+use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalIdTest extends TestCase
@@ -41,106 +42,22 @@ class GlobalIdTest extends TestCase
     /** @test */
     public function param_parsing()
     {
+        $model = Person::make()->forceFill(['id' => 5]);
+        $gid = GlobalId::create($model);
+
+        $this->assertTrue(GlobalId::parse($gid->toParam())->equalsTo($gid));
     }
 
     /** @test */
     public function find_with_param()
     {
-    }
+        $model = Person::create(['name' => 'Test']);
+        $gid = GlobalId::create($model);
 
-    /** @test */
-    public function find()
-    {
-    }
+        $found = GlobalId::find($gid->toParam());
 
-    /** @test */
-    public function find_with_class()
-    {
-    }
-
-    /** @test */
-    public function find_with_class_no_match()
-    {
-    }
-
-    /** @test */
-    public function find_with_subclass()
-    {
-    }
-
-    /** @test */
-    public function find_with_subclass_no_match()
-    {
-    }
-
-    /** @test */
-    public function find_with_module()
-    {
-    }
-
-    /** @test */
-    public function test_with_module_no_match()
-    {
-    }
-
-    /** @test */
-    public function find_with_multiple_class()
-    {
-    }
-
-    /** @test */
-    public function find_with_multiple_class_no_match()
-    {
-    }
-
-    /** @test */
-    public function find_with_multiple_module()
-    {
-    }
-
-    /** @test */
-    public function find_with_multiple_module_no_match()
-    {
-    }
-
-    /** @test */
-    public function to_string()
-    {
-    }
-
-    /** @test */
-    public function to_params()
-    {
-    }
-
-    /** @test */
-    public function to_uri()
-    {
-    }
-
-    /** @test */
-    public function model_id()
-    {
-    }
-
-    /** @test */
-    public function model_name()
-    {
-    }
-
-    /** @test */
-    public function model_class()
-    {
-    }
-
-    /** @test */
-    public function app_option()
-    {
-    }
-
-    /** @test */
-    public function equality()
-    {
+        $this->assertTrue($model->is($found));
+        $this->assertEquals($gid->modelId(), $found->id);
     }
 
     /** @test */
