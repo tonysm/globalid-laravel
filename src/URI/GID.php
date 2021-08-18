@@ -35,10 +35,17 @@ class GID
 
         $modelId = array_shift($explodedPath);
 
+        $params = [];
+
+        if ($parsed['query'] ?? false) {
+            parse_str($parsed['query'], $params);
+        }
+
         return new self(
             $parsed['host'],
             urldecode($modelName),
             urldecode($modelId),
+            $params,
         );
     }
 
@@ -90,7 +97,7 @@ class GID
 
     public function getParam($key)
     {
-        return $this->params[$key];
+        return $this->params[$key] ?? null;
     }
 
     public function toString(): string

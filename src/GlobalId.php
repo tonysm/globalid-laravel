@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Tonysm\GlobalId\URI\GID;
 use Facades\Tonysm\GlobalId\Locator;
 use Illuminate\Support\Arr;
+use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalId
 {
@@ -26,14 +27,31 @@ class GlobalId
             throw GlobalIdException::missingApp();
         }
 
-        return new static(GID::create($app, $model));
+        return new static(GID::create($app, $model, Arr::except($options, ['app'])));
     }
 
     public static function parse($gid): static
     {
-        return $gid instanceof static
-            ? $gid
-            : new static($gid);
+        try {
+            return $gid instanceof static
+                ? $gid
+                : new static($gid);
+        } catch (GIDParsingException) {
+            return static::parseEncoded($gid);
+        }
+    }
+
+    private static function parseEncoded(string $gid): static
+    {
+        return new static(base64_decode(static::repadGid($gid)));
+    }
+
+    private static function repadGid(string $gid): string
+    {
+        // Adding back the removed == signs at the end of the base64 encoded string.
+        $paddingCount = strlen($gid) % 4 == 0 ? 0 : 4 - (strlen($gid) % 4);
+
+        return str_pad($gid, $paddingCount, '=', STR_PAD_RIGHT);
     }
 
     public static function find($gid)
@@ -86,6 +104,11 @@ class GlobalId
         return $this->gid->equalsTo($globalId->gid);
     }
 
+    public function getParam($key)
+    {
+        return $this->gid->getParam($key);
+    }
+
     public function toString(): string
     {
         return $this->gid->toString();
@@ -93,6 +116,8 @@ class GlobalId
 
     public function toParam(): string
     {
+        // Remove any = sign at the end of the base64 string. We'll remove it back when parsing.
+
         return preg_replace('/=+$/', '', base64_encode($this->toString()));
     }
 }

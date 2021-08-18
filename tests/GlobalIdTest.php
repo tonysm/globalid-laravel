@@ -63,10 +63,22 @@ class GlobalIdTest extends TestCase
     /** @test */
     public function create_custom_params()
     {
+        $gid = GlobalId::create(Person::create(['name' => 'custom']), ['hello' => 'world']);
+        $this->assertEquals('world', $gid->getParam('hello'));
+    }
+
+    /** @test */
+    public function custom_params_ignore_app()
+    {
+        $gid = GlobalId::create(Person::create(['name' => 'custom']), ['app' => 'test', 'hello' => 'world']);
+        $this->assertEquals('world', $gid->getParam('hello'));
+        $this->assertEquals(null, $gid->getParam('app'));
     }
 
     /** @test */
     public function parse_custom_param()
     {
+        $gid = GlobalId::parse('gid://laravel/User/5?hello=world');
+        $this->assertEquals('world', $gid->getParam('hello'));
     }
 }
