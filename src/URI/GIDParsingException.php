@@ -10,6 +10,7 @@ class GIDParsingException extends RuntimeException
     {
         return new static('Invalid host');
     }
+
     public static function badUri(): self
     {
         return new static('Bad URI');

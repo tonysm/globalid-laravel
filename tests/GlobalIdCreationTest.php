@@ -3,7 +3,6 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\GlobalIdException;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
@@ -23,7 +22,6 @@ class GlobalIdCreationTest extends TestCase
         $this->personGid = GlobalId::create(Person::create(['name' => 'testing']));
         $this->uuidPersonGid = GlobalId::create(PersonUuid::create(['id' => $this->uuid, 'name' => 'uuid']));
     }
-
 
     /** @test */
     public function find()

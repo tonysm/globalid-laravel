@@ -2,10 +2,10 @@
 
 namespace Tonysm\GlobalId;
 
+use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Tonysm\GlobalId\Commands\GlobalIdCommand;
-use Illuminate\Support\Str;
 
 class GlobalIdServiceProvider extends PackageServiceProvider
 {

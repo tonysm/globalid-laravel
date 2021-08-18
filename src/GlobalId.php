@@ -2,10 +2,10 @@
 
 namespace Tonysm\GlobalId;
 
-use Illuminate\Database\Eloquent\Model;
-use Tonysm\GlobalId\URI\GID;
 use Facades\Tonysm\GlobalId\Locator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Tonysm\GlobalId\URI\GID;
 use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalId
