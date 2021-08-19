@@ -10,7 +10,7 @@ use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalId
 {
-    private static $app;
+    public static $app;
 
     private GID $gid;
 
@@ -30,7 +30,7 @@ class GlobalId
         return new static(GID::create($app, $model, Arr::except($options, ['app'])));
     }
 
-    public static function parse($gid): static
+    public static function parse($gid): ?static
     {
         try {
             return $gid instanceof static
@@ -41,9 +41,13 @@ class GlobalId
         }
     }
 
-    private static function parseEncoded(string $gid): static
+    private static function parseEncoded(string $gid): ?static
     {
-        return new static(base64_decode(static::repadGid($gid)));
+        try {
+            return new static(base64_decode(static::repadGid($gid)));
+        } catch (GIDParsingException) {
+            return null;
+        }
     }
 
     private static function repadGid(string $gid): string
@@ -68,25 +72,14 @@ class GlobalId
 
     public function locate($only = null)
     {
-        if (! $this->canFind($only)) {
-            return null;
-        }
-
         $locator = fn (GlobalId $globalId, $only = null) => Locator::locate($globalId, only: $only);
 
         return $locator($this, $only);
     }
 
-    private function canFind($only = null): bool
+    public function app(): string
     {
-        if (! $only) {
-            return true;
-        }
-
-        return ! is_null(collect($only)->first(fn ($onlyClass) => (
-            $this->modelName() === $onlyClass
-            || is_subclass_of($this->modelName(), $onlyClass)
-        )));
+        return $this->gid->app;
     }
 
     public function modelName(): string
