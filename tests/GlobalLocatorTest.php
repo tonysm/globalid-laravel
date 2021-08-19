@@ -202,7 +202,7 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function use_locator()
     {
-        Locator::use('foo', new class implements LocatorContract {
+        Locator::use('foo', new class() implements LocatorContract {
             public function locate(GlobalId $globalId, $only = null)
             {
                 return 'mocked';
@@ -223,7 +223,7 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function use_locator_app_is_case_insensitive()
     {
-        Locator::use('foo', new class implements LocatorContract {
+        Locator::use('foo', new class() implements LocatorContract {
             public function locate(GlobalId $globalId, $only = null)
             {
                 return 'mocked';
@@ -246,7 +246,7 @@ class GlobalLocatorTest extends TestCase
     {
         $this->expectException(GlobalIdException::class);
 
-        Locator::use('foo_lorem', new class implements LocatorContract {
+        Locator::use('foo_lorem', new class() implements LocatorContract {
             public function locate(GlobalId $globalId, $only = null)
             {
                 return 'mocked';

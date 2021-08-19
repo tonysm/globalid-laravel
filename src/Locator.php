@@ -17,7 +17,7 @@ class Locator
         try {
             GID::validateAppName($app);
         } catch (GIDParsingException $e) {
-            throw GlobalIdException::invalidApp($app ,$e);
+            throw GlobalIdException::invalidApp($app, $e);
         }
 
         $this->locators[$this->normalizeApp($app)] = $this->resolve($locator);
@@ -53,7 +53,7 @@ class Locator
 
     private function locatorFor(GlobalId $globalId): LocatorContract
     {
-        return $this->locators[$this->normalizeApp($globalId->app())] ?? new BaseLocator;
+        return $this->locators[$this->normalizeApp($globalId->app())] ?? new BaseLocator();
     }
 
     private function canFind($modelClass, $only = null): bool
@@ -76,7 +76,7 @@ class Locator
     private function resolve($locator)
     {
         if (is_null($locator)) {
-            return new BaseLocator;
+            return new BaseLocator();
         }
 
         $locator = value($locator);
