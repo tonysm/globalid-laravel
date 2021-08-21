@@ -92,7 +92,7 @@ class SignedGlobalId extends GlobalId
 
     public function toString(): string
     {
-        return $this->sgid ??= $this->verifier->generate($this->toArray());
+        return $this->cachedSgid ??= $this->verifier->generate($this->toArray());
     }
 
     public function toParam(): string
