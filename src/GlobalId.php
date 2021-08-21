@@ -41,8 +41,12 @@ class GlobalId
         }
     }
 
-    protected static function parseEncoded(string $gid): ?static
+    protected static function parseEncoded($gid): ?static
     {
+        if ($gid === null) {
+            return null;
+        }
+
         try {
             return new static(base64_decode(static::repadGid($gid)));
         } catch (GIDParsingException) {

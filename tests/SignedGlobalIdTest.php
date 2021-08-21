@@ -15,13 +15,15 @@ class SignedGlobalIdTest extends TestCase
     {
         parent::setUp();
 
+        $this->travelTo(now()->parse('2021-09-21T18:07:45Z'));
+
         $this->model = Person::create(['name' => 'signed user']);
         $this->personSgid = SignedGlobalId::create($this->model);
     }
     /** @test */
     public function to_string()
     {
-        $this->assertEquals('ImdpZDpcL1wvbGFyYXZlbFwvVG9ueXNtJTVDR2xvYmFsSWQlNUNUZXN0cyU1Q1N0dWJzJTVDTW9kZWxzJTVDUGVyc29uXC8xIg==--d0846546b6776dd5784941438a98db36cc4b5dcb55188a25789f9c997d432035', $this->personSgid->toString());
+        $this->assertEquals('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzEiLCJwdXJwb3NlIjoiZGVmYXVsdCIsImV4cGlyZXNfYXQiOiIyMDIxLTEwLTIxVDE4OjA3OjQ1WiJ9--03906479811fcd37fc53deff414f525cd7cd94d844b0cb6d6e547e5a2d912740', $this->personSgid->toString());
     }
 
     /** @test */
@@ -52,5 +54,11 @@ class SignedGlobalIdTest extends TestCase
     public function to_param()
     {
         $this->assertEquals($this->personSgid->toParam(), $this->personSgid->toString());
+    }
+
+    /** @test */
+    public function parses_signed_gids()
+    {
+        $this->assertTrue($this->personSgid->equalsTo(SignedGlobalId::parse($this->personSgid->toString())));
     }
 }

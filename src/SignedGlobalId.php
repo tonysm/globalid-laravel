@@ -4,6 +4,7 @@ namespace Tonysm\GlobalId;
 
 use Carbon\CarbonInterface;
 use Illuminate\Support\Arr;
+use Tonysm\GlobalId\Exceptions\SignedGlobalIdException;
 use Tonysm\GlobalId\URI\GID;
 
 class SignedGlobalId extends GlobalId
@@ -19,6 +20,11 @@ class SignedGlobalId extends GlobalId
     private ?CarbonInterface $expiresAt = null;
 
     private string $cachedSgid;
+
+    public static function parse($gid, array $options = []): ?static
+    {
+        return parent::parse(static::verify($gid, $options), $options);
+    }
 
     public static function create($model, array $options = []): static
     {
@@ -69,6 +75,32 @@ class SignedGlobalId extends GlobalId
         return now()->addMonth();
     }
 
+    private static function verify($sgid, array $options = [])
+    {
+        $metadata = static::pickVerifier($options)->verify($sgid);
+
+        try {
+            throw_if(static::hasExpired($metadata['expires_at']), SignedGlobalIdException::expired());
+        } catch (SignedGlobalIdException) {
+            return null;
+        }
+
+        if ($metadata['purpose'] !== static::pickPurpose($options)) {
+            return null;
+        }
+
+        return $metadata['sgid'];
+    }
+
+    private static function hasExpired($expiredAt): bool
+    {
+        if (! $expiredAt) {
+            return false;
+        }
+
+        return now()->parse($expiredAt)->lt(now());
+    }
+
     public function __construct($gid, array $options = [])
     {
         parent::__construct($gid, $options);
@@ -97,6 +129,15 @@ class SignedGlobalId extends GlobalId
     public function toParam(): string
     {
         return $this->toString();
+    }
+
+    public function equalsTo(GlobalId $globalId): bool
+    {
+        if (! $globalId instanceof SignedGlobalId) {
+            return parent::equalsTo($globalId);
+        }
+
+        return $this->gid->equalsTo($globalId->gid) && $globalId->purpose === $this->purpose;
     }
 
     private function toArray(): array

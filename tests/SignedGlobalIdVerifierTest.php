@@ -46,8 +46,9 @@ class FakeVerifier extends Verifier
     {
     }
 
-    public function verify(SignedGlobalId $sgid)
+    public function verify($sgid): array
     {
+        return [];
     }
 
     public function generate(array $data): string

@@ -9,8 +9,12 @@ class GID
 {
     public const SCHEME = 'gid';
 
-    public static function parse(string $gid): self
+    public static function parse($gid): self
     {
+        if ($gid === null) {
+            throw GIDParsingException::cannotBeNull();
+        }
+
         $parsed = parse_url($gid);
 
         if (false === $parsed || ! isset($parsed['scheme']) || $parsed['scheme'] !== static::SCHEME) {

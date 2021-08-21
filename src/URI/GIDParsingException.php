@@ -25,4 +25,9 @@ class GIDParsingException extends RuntimeException
     {
         return new static('Missing model ID');
     }
+
+    public static function cannotBeNull(): self
+    {
+        return new static('GID cannot be null.');
+    }
 }
