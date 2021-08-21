@@ -2,17 +2,14 @@
 
 namespace Tonysm\GlobalId\Tests;
 
-use Tonysm\GlobalId\Exceptions\MissingVerifierException;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
-use Tonysm\GlobalId\URI\GID;
 use Tonysm\GlobalId\Verifier;
 
 class SignedGlobalIdVerifierTest extends TestCase
 {
     private Person $model;
-    private SignedGlobalId $sgid;
 
     public function setUp(): void
     {
