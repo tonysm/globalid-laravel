@@ -12,7 +12,7 @@ class GlobalId
 {
     public static $app;
 
-    private GID $gid;
+    protected GID $gid;
 
     public static function useAppName(string $app): void
     {
@@ -41,7 +41,7 @@ class GlobalId
         }
     }
 
-    private static function parseEncoded(string $gid): ?static
+    protected static function parseEncoded(string $gid): ?static
     {
         try {
             return new static(base64_decode(static::repadGid($gid)));
@@ -50,7 +50,7 @@ class GlobalId
         }
     }
 
-    private static function repadGid(string $gid): string
+    protected static function repadGid(string $gid): string
     {
         // Adding back the removed == signs at the end of the base64 encoded string.
         $paddingCount = strlen($gid) % 4 == 0 ? 0 : 4 - (strlen($gid) % 4);
@@ -63,7 +63,7 @@ class GlobalId
         return static::parse($gid)->locate();
     }
 
-    public function __construct($gid)
+    public function __construct($gid, array $options = [])
     {
         $this->gid = $gid instanceof GID
             ? $gid

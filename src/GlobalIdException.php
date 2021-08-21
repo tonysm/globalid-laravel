@@ -7,6 +7,11 @@ use Throwable;
 
 class GlobalIdException extends RuntimeException
 {
+    public static function missingVerifier(): self
+    {
+        return new static('Missing the `verifier` option.');
+    }
+
     public static function missingApp(): self
     {
         return new static('An app is required to create a GlobalId.');
