@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId;
 
 use Carbon\CarbonInterface;
+use Closure;
 use Illuminate\Support\Arr;
 use Tonysm\GlobalId\Exceptions\SignedGlobalIdException;
 use Tonysm\GlobalId\URI\GID;
@@ -13,13 +14,18 @@ class SignedGlobalId extends GlobalId
     const ITERATIONS = 100;
     const KEY_SIZE = 64;
 
-    public static ?CarbonInterface $expiresIn;
+    public static ?Closure $expiresInResolver = null;
 
     private Verifier $verifier;
     private string $purpose;
     private ?CarbonInterface $expiresAt = null;
 
     private string $cachedSgid;
+
+    public static function useExpirationResolver(?Closure $expiresInResolver)
+    {
+        static::$expiresInResolver = $expiresInResolver;
+    }
 
     public static function parse($gid, array $options = []): ?static
     {
@@ -69,9 +75,12 @@ class SignedGlobalId extends GlobalId
         return $options['for'] ?? static::DEFAULT_PURPOSE;
     }
 
-    public static function expiresIn(): ?CarbonInterface
+    private static function expiresIn(): ?CarbonInterface
     {
-        // @TODO: allow consumers to specific the desired expiresIn globally.
+        if (static::$expiresInResolver) {
+            return call_user_func(static::$expiresInResolver);
+        }
+
         return now()->addMonth();
     }
 
@@ -112,13 +121,11 @@ class SignedGlobalId extends GlobalId
 
     public function pickExpiration(array $options = []): ?CarbonInterface
     {
-        if ($options['expires_at'] ?? false) {
+        if (array_key_exists('expires_at', $options)) {
             return $options['expires_at'];
         }
 
-        if ($expiresIn = $options['expires_in'] ?? static::expiresIn()) {
-            return $expiresIn;
-        }
+        return static::expiresIn();
     }
 
     public function toString(): string
@@ -138,6 +145,11 @@ class SignedGlobalId extends GlobalId
         }
 
         return $this->gid->equalsTo($globalId->gid) && $globalId->purpose === $this->purpose;
+    }
+
+    public function expiresAt(): ?CarbonInterface
+    {
+        return $this->expiresAt?->copy();
     }
 
     private function toArray(): array
