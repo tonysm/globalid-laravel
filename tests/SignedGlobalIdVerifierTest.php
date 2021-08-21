@@ -23,7 +23,7 @@ class SignedGlobalIdVerifierTest extends TestCase
     public function create_accepts_a_verifier()
     {
         $sgid = SignedGlobalId::create($this->model, [
-            'verifier' => new FakeVerifier,
+            'verifier' => new FakeVerifier(),
         ]);
 
         $this->assertEquals('mocked', $sgid->toString());
@@ -33,7 +33,7 @@ class SignedGlobalIdVerifierTest extends TestCase
     public function new_accepts_a_verifier()
     {
         $sgid = new SignedGlobalId(GlobalId::create($this->model)->toString(), [
-            'verifier' => new FakeVerifier,
+            'verifier' => new FakeVerifier(),
         ]);
 
         $this->assertEquals('mocked', $sgid->toString());

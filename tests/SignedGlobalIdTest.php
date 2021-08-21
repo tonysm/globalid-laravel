@@ -20,6 +20,7 @@ class SignedGlobalIdTest extends TestCase
         $this->model = Person::create(['name' => 'signed user']);
         $this->personSgid = SignedGlobalId::create($this->model);
     }
+
     /** @test */
     public function to_string()
     {

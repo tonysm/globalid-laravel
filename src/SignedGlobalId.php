@@ -10,9 +10,9 @@ use Tonysm\GlobalId\URI\GID;
 
 class SignedGlobalId extends GlobalId
 {
-    const DEFAULT_PURPOSE = 'default';
-    const ITERATIONS = 100;
-    const KEY_SIZE = 64;
+    public const DEFAULT_PURPOSE = 'default';
+    public const ITERATIONS = 100;
+    public const KEY_SIZE = 64;
 
     public static ?Closure $expiresInResolver = null;
 
@@ -36,6 +36,7 @@ class SignedGlobalId extends GlobalId
     {
         if ($app = $options['app'] ?? GlobalId::$app) {
             $params = Arr::except($options, ['app', 'verifier', 'for']);
+
             return new static(GID::create($app, $model, $params), $options);
         }
 
