@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\GlobalIdException;
 use Tonysm\GlobalId\Locators\LocatorContract;
+use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\Stubs\Models\PersonUuid;
 
@@ -16,6 +17,7 @@ class GlobalLocatorTest extends TestCase
 {
     private Person $model;
     private GlobalId $gid;
+    private SignedGlobalId $sgid;
 
     public function setUp(): void
     {
@@ -23,6 +25,7 @@ class GlobalLocatorTest extends TestCase
 
         $this->model = Person::create(['name' => 'a person']);
         $this->gid = GlobalId::create($this->model);
+        $this->sgid = SignedGlobalId::create($this->model);
     }
 
     /** @test */
@@ -118,41 +121,85 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_sgid()
     {
+        $found = Locator::locateSigned($this->sgid);
+
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_sgid_with_only()
     {
+        $found = Locator::locateSigned($this->sgid, only: Person::class);
+
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_sgid_with_only_matching_subclass()
     {
+        $found = Locator::locateSigned($this->sgid, only: Model::class);
+
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_sgid_with_only_no_matching_class()
     {
+        $this->assertNull(Locator::locateSigned($this->sgid, only: PersonUuid::class));
     }
 
     /** @test */
     public function by_sgid_with_only_multiple_types()
     {
+        $found = Locator::locateSigned($this->sgid, only: [Person::class, PersonUuid::class]);
+
+        $this->assertTrue($this->model->is($found));
+    }
+
+    /** @test */
+    public function by_sgid_with_only_multiple_types_no_match()
+    {
+        $this->assertNull(Locator::locateSigned($this->sgid, only: [GlobalId::class, PersonUuid::class]));
     }
 
     /** @test */
     public function by_many_sgid_of_one_class()
     {
+        $found = Locator::locateSigned($this->sgid, only: [Person::class, PersonUuid::class]);
+
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_many_sgid_of_mixed_classes()
     {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = Person::create(['name' => 'second']);
+
+        $sgid1 = SignedGlobalId::create($p1);
+        $sgid2 = SignedGlobalId::create($p2);
+
+        $found = Locator::locateManySigned([$sgid1, $sgid2]);
+
+        $this->assertCount(2, $found);
+        $this->assertTrue($found[0]->is($p1));
+        $this->assertTrue($found[1]->is($p2));
     }
 
     /** @test */
     public function by_many_sgids_with_only_matching_subclass()
     {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = PersonUuid::create(['id' => (string) Str::uuid(), 'name' => 'second']);
+
+        $sgid1 = SignedGlobalId::create($p1);
+        $sgid2 = SignedGlobalId::create($p2);
+
+        $found = Locator::locateManySigned([$sgid1, $sgid2]);
+
+        $this->assertCount(2, $found);
+        $this->assertTrue($found[0]->is($p1));
+        $this->assertTrue($found[1]->is($p2));
     }
 
     /** @test */

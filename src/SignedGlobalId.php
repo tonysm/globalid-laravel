@@ -87,7 +87,9 @@ class SignedGlobalId extends GlobalId
 
     private static function verify($sgid, array $options = [])
     {
-        $metadata = static::pickVerifier($options)->verify($sgid);
+        $metadata = static::pickVerifier($options)->verify(
+            $sgid instanceof SignedGlobalId ? $sgid->toString() : $sgid
+        );
 
         try {
             throw_if(static::hasExpired($metadata['expires_at']), SignedGlobalIdException::expired());

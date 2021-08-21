@@ -2,6 +2,7 @@
 
 namespace Tonysm\GlobalId;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Tonysm\GlobalId\Locators\BaseLocator;
 use Tonysm\GlobalId\Locators\LocatorContract;
@@ -25,22 +26,37 @@ class Locator
         return $this;
     }
 
-    public function locate($globalId, $only = null)
+    public function locate($gid, $only = null)
     {
-        if (($globalId = GlobalId::parse($globalId)) && $this->canFind($globalId->modelName(), only: $only)) {
-            return $this->locatorFor($globalId)->locate($globalId);
+        if (($gid = GlobalId::parse($gid)) && $this->canFind($gid->modelName(), only: $only)) {
+            return $this->locatorFor($gid)->locate($gid);
         }
 
         return null;
     }
 
-    public function locateMany($globalIds, $only = null): Collection
+    public function locateMany($gids, $only = null): Collection
     {
-        if ($allowedGlobalIds = $this->parseAllowed($globalIds, $only)) {
+        if ($allowedGlobalIds = $this->parseAllowed($gids, $only)) {
             return $this->locatorFor($allowedGlobalIds->first())->locateMany($allowedGlobalIds);
         }
 
         return collect();
+    }
+
+    public function locateSigned($sgid, $only = null)
+    {
+        return SignedGlobalId::find($sgid, $only);
+    }
+
+    public function locateManySigned($sgids, array $options = []): Collection
+    {
+        return $this->locateMany(
+            collect($sgids)->map(fn ($sgid) => (
+                SignedGlobalId::parse($sgid, Arr::except($options, 'only'))
+            )),
+            $options['only'] ?? null,
+        );
     }
 
     private function parseAllowed($globalIds, $only = null): Collection

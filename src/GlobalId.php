@@ -62,9 +62,9 @@ class GlobalId
         return str_pad($gid, $paddingCount, '=', STR_PAD_RIGHT);
     }
 
-    public static function find($gid)
+    public static function find($gid, $only = null)
     {
-        return static::parse($gid)->locate();
+        return static::parse($gid)->locate($only);
     }
 
     public function __construct($gid, array $options = [])
