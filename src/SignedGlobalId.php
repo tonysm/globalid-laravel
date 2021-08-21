@@ -3,7 +3,6 @@
 namespace Tonysm\GlobalId;
 
 use Carbon\CarbonInterface;
-use Closure;
 use Illuminate\Support\Arr;
 use Tonysm\GlobalId\URI\GID;
 

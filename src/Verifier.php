@@ -25,7 +25,7 @@ class Verifier
         return "{$parsed}--{$signature}";
     }
 
-    public function key(): string
+    private function key(): string
     {
         return $this->cachedKey ??= call_user_func($this->keyResolver);
     }
