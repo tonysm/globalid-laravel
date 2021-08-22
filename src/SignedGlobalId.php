@@ -4,6 +4,7 @@ namespace Tonysm\GlobalId;
 
 use Carbon\CarbonInterface;
 use Closure;
+use Tonysm\GlobalId\Exceptions\InvalidSignatureException;
 use Tonysm\GlobalId\Exceptions\SignedGlobalIdException;
 
 class SignedGlobalId extends GlobalId
@@ -74,13 +75,13 @@ class SignedGlobalId extends GlobalId
 
     private static function verify($sgid, array $options = [])
     {
-        $metadata = static::pickVerifier($options)->verify(
-            $sgid instanceof SignedGlobalId ? $sgid->toString() : $sgid
-        );
-
         try {
+            $metadata = static::pickVerifier($options)->verify(
+                $sgid instanceof SignedGlobalId ? $sgid->toString() : $sgid
+            );
+
             throw_if(static::hasExpired($metadata['expires_at']), SignedGlobalIdException::expired());
-        } catch (SignedGlobalIdException) {
+        } catch (SignedGlobalIdException | InvalidSignatureException) {
             return null;
         }
 

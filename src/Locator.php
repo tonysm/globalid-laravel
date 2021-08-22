@@ -28,7 +28,7 @@ class Locator
 
     public function locate($gid, array $options = [])
     {
-        if (($gid = GlobalId::parse($gid)) && $this->canFind($gid->modelName(), $options)) {
+        if (($gid = GlobalId::parse($gid, $options)) && $this->canFind($gid->modelName(), $options)) {
             return $this->locatorFor($gid)->locate($gid);
         }
 

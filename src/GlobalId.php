@@ -67,7 +67,7 @@ class GlobalId
 
     public static function find($gid, array $options = [])
     {
-        return static::parse($gid)->locate($options);
+        return static::parse($gid, $options)?->locate($options);
     }
 
     public function __construct($gid, array $options = [])

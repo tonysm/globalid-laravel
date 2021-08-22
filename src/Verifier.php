@@ -28,7 +28,7 @@ class Verifier
         return $data;
     }
 
-    public function generate(array $data): string
+    public function generate($data): string
     {
         $parsed = base64_encode(json_encode($data));
 

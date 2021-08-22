@@ -6,6 +6,7 @@ use Facades\Tonysm\GlobalId\Locator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Tonysm\GlobalId\Exceptions\LocatorException;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\GlobalIdException;
 use Tonysm\GlobalId\Locators\LocatorContract;
@@ -251,6 +252,7 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_non_sgid_returns_null()
     {
+        $this->assertNull(Locator::locateSigned('This is not a SGID'));
     }
 
     /** @test */
@@ -325,26 +327,46 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_valid_purpose_returns_right_model()
     {
+        $gid = $this->model->toGlobalId(['for' => 'login']);
+
+        $found = Locator::locate($gid->toString(), ['for' => 'login']);
+
+        $this->assertInstanceOf(Person::class, $found);
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_valid_purpose_with_sgid_returns_right_model()
     {
-    }
+        $sgid = $this->model->toSignedGlobalId(['for' => 'login']);
 
-    /** @test */
-    public function by_invalid_purpose_returns_null()
-    {
+        $found = Locator::locateSigned($sgid->toString(), ['for' => 'login']);
+
+        $this->assertInstanceOf(Person::class, $found);
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_invalid_purpose_with_sgid_returns_null()
     {
+        $sgid = $this->model->toSignedGlobalId(['for' => 'login']);
+
+        $found = Locator::locateSigned($sgid->toString(), ['for' => 'like_button']);
+
+        $this->assertNull($found);
     }
 
     /** @test */
     public function by_many_with_one_record_missing()
     {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = Person::create(['name' => 'second']);
+
+        $p1->delete();
+
+        $this->expectException(LocatorException::class);
+
+        Locator::locateMany([$p1->toGlobalId()->toString(), $p2->toGlobalId()->toString()]);
     }
 
     private function withApp($app, callable $callback)

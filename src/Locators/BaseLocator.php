@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Locators;
 
 use Illuminate\Support\Collection;
+use Tonysm\GlobalId\Exceptions\LocatorException;
 use Tonysm\GlobalId\GlobalId;
 
 class BaseLocator implements LocatorContract
@@ -20,8 +21,14 @@ class BaseLocator implements LocatorContract
 
         $loadedByModel = $idsByModel->map(fn ($ids, $model) => $model::findMany($ids));
 
-        return $globalIds->map(fn (GlobalId $globalId) => (
-            $loadedByModel[$globalId->modelName()]->find($globalId->modelId())
-        ));
+        return $globalIds->map(function (GlobalId $gid) use ($loadedByModel) {
+            $found = $loadedByModel[$gid->modelName()]->find($gid->modelId());
+
+            if (! $found) {
+                throw LocatorException::modelNotFoundFromLocateMany();
+            }
+
+            return $found;
+        });
     }
 }
