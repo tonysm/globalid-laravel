@@ -27,28 +27,31 @@ class GlobalId
             throw GlobalIdException::missingApp();
         }
 
-        return new static(GID::create($app, $model, Arr::except($options, ['app'])));
+        return new static(
+            GID::create($app, $model, Arr::except($options, ['app', 'verifier', 'for'])),
+            $options,
+        );
     }
 
-    public static function parse($gid): ?static
+    public static function parse($gid, array $options = []): ?static
     {
         try {
             return $gid instanceof static
                 ? $gid
-                : new static($gid);
+                : new static($gid, $options);
         } catch (GIDParsingException) {
-            return static::parseEncoded($gid);
+            return static::parseEncoded($gid, $options);
         }
     }
 
-    protected static function parseEncoded($gid): ?static
+    protected static function parseEncoded($gid, array $options = []): ?static
     {
         if ($gid === null) {
             return null;
         }
 
         try {
-            return new static(base64_decode(static::repadGid($gid)));
+            return new static(base64_decode(static::repadGid($gid)), $options);
         } catch (GIDParsingException) {
             return null;
         }
@@ -62,9 +65,9 @@ class GlobalId
         return str_pad($gid, $paddingCount, '=', STR_PAD_RIGHT);
     }
 
-    public static function find($gid, $only = null)
+    public static function find($gid, array $options = [])
     {
-        return static::parse($gid)->locate($only);
+        return static::parse($gid)->locate($options);
     }
 
     public function __construct($gid, array $options = [])
@@ -74,11 +77,11 @@ class GlobalId
             : GID::parse($gid);
     }
 
-    public function locate($only = null)
+    public function locate(array $options = [])
     {
-        $locator = fn (GlobalId $globalId, $only = null) => Locator::locate($globalId, only: $only);
+        $locator = fn (GlobalId $globalId, array $options = []) => Locator::locate($globalId, $options);
 
-        return $locator($this, $only);
+        return $locator($this, $options);
     }
 
     public function app(): string

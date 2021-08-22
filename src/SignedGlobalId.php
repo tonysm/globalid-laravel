@@ -4,9 +4,7 @@ namespace Tonysm\GlobalId;
 
 use Carbon\CarbonInterface;
 use Closure;
-use Illuminate\Support\Arr;
 use Tonysm\GlobalId\Exceptions\SignedGlobalIdException;
-use Tonysm\GlobalId\URI\GID;
 
 class SignedGlobalId extends GlobalId
 {
@@ -30,17 +28,6 @@ class SignedGlobalId extends GlobalId
     public static function parse($gid, array $options = []): ?static
     {
         return parent::parse(static::verify($gid, $options), $options);
-    }
-
-    public static function create($model, array $options = []): static
-    {
-        if ($app = $options['app'] ?? GlobalId::$app) {
-            $params = Arr::except($options, ['app', 'verifier', 'for']);
-
-            return new static(GID::create($app, $model, $params), $options);
-        }
-
-        throw GlobalIdException::missingApp();
     }
 
     public static function pickVerifier(array $options = []): Verifier

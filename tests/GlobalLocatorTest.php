@@ -38,35 +38,35 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_gid_with_only_with_matching_class()
     {
-        $found = Locator::locate($this->gid, only: Person::class);
+        $found = Locator::locate($this->gid, ['only' => Person::class]);
         $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_gid_with_only_as_subclass()
     {
-        $found = Locator::locate($this->gid, only: Model::class);
+        $found = Locator::locate($this->gid, ['only' => Model::class]);
         $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_gid_with_only_as_no_matching_class()
     {
-        $found = Locator::locate($this->gid, only: PersonUuid::class);
+        $found = Locator::locate($this->gid, ['only' => PersonUuid::class]);
         $this->assertNull($found);
     }
 
     /** @test */
     public function by_gid_with_multiple_types()
     {
-        $found = Locator::locate($this->gid, only: [Person::class, PersonUuid::class]);
+        $found = Locator::locate($this->gid, ['only' => [Person::class, PersonUuid::class]]);
         $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_gid_with_multiples_types_no_matching()
     {
-        $found = Locator::locate($this->gid, only: [GlobalId::class, PersonUuid::class]);
+        $found = Locator::locate($this->gid, ['only' => [GlobalId::class, PersonUuid::class]]);
         $this->assertNull($found);
     }
 
@@ -111,7 +111,7 @@ class GlobalLocatorTest extends TestCase
         $p2 = Person::create(['name' => 'second']);
         $uuidP1 = PersonUuid::create(['id' => (string) Str::uuid(), 'name' => 'second']);
 
-        $found = Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2), GlobalId::create($uuidP1)], only: PersonUuid::class);
+        $found = Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2), GlobalId::create($uuidP1)], ['only' => PersonUuid::class]);
 
         $this->assertCount(1, $found);
 
@@ -129,7 +129,7 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_sgid_with_only()
     {
-        $found = Locator::locateSigned($this->sgid, only: Person::class);
+        $found = Locator::locateSigned($this->sgid, ['only' => Person::class]);
 
         $this->assertTrue($this->model->is($found));
     }
@@ -137,7 +137,7 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_sgid_with_only_matching_subclass()
     {
-        $found = Locator::locateSigned($this->sgid, only: Model::class);
+        $found = Locator::locateSigned($this->sgid, ['only' => Model::class]);
 
         $this->assertTrue($this->model->is($found));
     }
@@ -145,13 +145,13 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_sgid_with_only_no_matching_class()
     {
-        $this->assertNull(Locator::locateSigned($this->sgid, only: PersonUuid::class));
+        $this->assertNull(Locator::locateSigned($this->sgid, ['only' => PersonUuid::class]));
     }
 
     /** @test */
     public function by_sgid_with_only_multiple_types()
     {
-        $found = Locator::locateSigned($this->sgid, only: [Person::class, PersonUuid::class]);
+        $found = Locator::locateSigned($this->sgid, ['only' => [Person::class, PersonUuid::class]]);
 
         $this->assertTrue($this->model->is($found));
     }
@@ -159,13 +159,13 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_sgid_with_only_multiple_types_no_match()
     {
-        $this->assertNull(Locator::locateSigned($this->sgid, only: [GlobalId::class, PersonUuid::class]));
+        $this->assertNull(Locator::locateSigned($this->sgid, ['only' => [GlobalId::class, PersonUuid::class]]));
     }
 
     /** @test */
     public function by_many_sgid_of_one_class()
     {
-        $found = Locator::locateSigned($this->sgid, only: [Person::class, PersonUuid::class]);
+        $found = Locator::locateSigned($this->sgid, ['only' => [Person::class, PersonUuid::class]]);
 
         $this->assertTrue($this->model->is($found));
     }
@@ -174,7 +174,7 @@ class GlobalLocatorTest extends TestCase
     public function by_many_sgid_of_mixed_classes()
     {
         $p1 = Person::create(['name' => 'first']);
-        $p2 = Person::create(['name' => 'second']);
+        $p2 = PersonUuid::create(['id' => (string) Str::uuid(),'name' => 'second']);
 
         $sgid1 = SignedGlobalId::create($p1);
         $sgid2 = SignedGlobalId::create($p2);
@@ -195,11 +195,10 @@ class GlobalLocatorTest extends TestCase
         $sgid1 = SignedGlobalId::create($p1);
         $sgid2 = SignedGlobalId::create($p2);
 
-        $found = Locator::locateManySigned([$sgid1, $sgid2]);
+        $found = Locator::locateManySigned([$sgid1, $sgid2], ['only' => Person::class]);
 
-        $this->assertCount(2, $found);
+        $this->assertCount(1, $found);
         $this->assertTrue($found[0]->is($p1));
-        $this->assertTrue($found[1]->is($p2));
     }
 
     /** @test */
@@ -212,11 +211,28 @@ class GlobalLocatorTest extends TestCase
     /** @test */
     public function by_sgid_string()
     {
+        $found = Locator::locateSigned($this->sgid->toString());
+        $this->assertTrue($this->model->is($found));
     }
 
     /** @test */
     public function by_many_sgid_strings_with_for_restriction_to_matching_purpose()
     {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = Person::create(['name' => 'second']);
+        $p3 = PersonUuid::create(['id' => (string) Str::uuid(), 'name' => 'uuid']);
+
+        $sgid1 = SignedGlobalId::create($p1, ['for' => 'adoption']);
+        $sgid2 = SignedGlobalId::create($p2);
+        $sgid3 = SignedGlobalId::create($p3, ['for' => 'adoption']);
+
+        $found = Locator::locateManySigned([$sgid1, $sgid2, $sgid3], [
+            'only' => Person::class,
+            'for' => 'adoption',
+        ]);
+
+        $this->assertCount(1, $found);
+        $this->assertTrue($p1->is($found->first()));
     }
 
     /** @test */

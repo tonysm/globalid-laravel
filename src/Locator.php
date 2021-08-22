@@ -26,44 +26,44 @@ class Locator
         return $this;
     }
 
-    public function locate($gid, $only = null)
+    public function locate($gid, array $options = [])
     {
-        if (($gid = GlobalId::parse($gid)) && $this->canFind($gid->modelName(), only: $only)) {
+        if (($gid = GlobalId::parse($gid)) && $this->canFind($gid->modelName(), $options)) {
             return $this->locatorFor($gid)->locate($gid);
         }
 
         return null;
     }
 
-    public function locateMany($gids, $only = null): Collection
+    public function locateMany($gids, array $options = []): Collection
     {
-        if ($allowedGlobalIds = $this->parseAllowed($gids, $only)) {
+        if ($allowedGlobalIds = $this->parseAllowed($gids, $options)) {
             return $this->locatorFor($allowedGlobalIds->first())->locateMany($allowedGlobalIds);
         }
 
         return collect();
     }
 
-    public function locateSigned($sgid, $only = null)
+    public function locateSigned($sgid, array $options = [])
     {
-        return SignedGlobalId::find($sgid, $only);
+        return SignedGlobalId::find($sgid, $options);
     }
 
     public function locateManySigned($sgids, array $options = []): Collection
     {
         return $this->locateMany(
             collect($sgids)->map(fn ($sgid) => (
-                SignedGlobalId::parse($sgid, Arr::except($options, 'only'))
-            )),
-            $options['only'] ?? null,
+                SignedGlobalId::parse($sgid, Arr::only($options, 'for'))
+            ))->filter()->values(),
+            $options
         );
     }
 
-    private function parseAllowed($globalIds, $only = null): Collection
+    private function parseAllowed($globalIds, array $options = []): Collection
     {
         return collect($globalIds)
             ->map(fn ($globalId) => GlobalId::parse($globalId))
-            ->filter(fn (GlobalId $globalId) => $this->canFind($globalId->modelName(), $only))
+            ->filter(fn (GlobalId $globalId) => $this->canFind($globalId->modelName(), $options))
             ->values();
     }
 
@@ -72,13 +72,13 @@ class Locator
         return $this->locators[$this->normalizeApp($globalId->app())] ?? new BaseLocator();
     }
 
-    private function canFind($modelClass, $only = null): bool
+    private function canFind($modelClass, array $options = []): bool
     {
-        if (! $only) {
+        if (! array_key_exists('only', $options)) {
             return true;
         }
 
-        return ! is_null(collect($only)->first(fn ($onlyClass) => (
+        return ! is_null(collect($options['only'])->first(fn ($onlyClass) => (
             $modelClass === $onlyClass
             || is_subclass_of($modelClass, $onlyClass)
         )));

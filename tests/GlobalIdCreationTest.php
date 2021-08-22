@@ -33,36 +33,36 @@ class GlobalIdCreationTest extends TestCase
     /** @test */
     public function find_with_class()
     {
-        $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(only: Person::class)));
-        $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(only: PersonUuid::class)));
+        $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(['only' => Person::class])));
+        $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(['only' => PersonUuid::class])));
     }
 
     /** @test */
     public function find_with_class_no_match()
     {
-        $this->assertNull($this->personGid->locate(only: PersonUuid::class));
-        $this->assertNull($this->uuidPersonGid->locate(only: Person::class));
+        $this->assertNull($this->personGid->locate(['only' => PersonUuid::class]));
+        $this->assertNull($this->uuidPersonGid->locate(['only' => Person::class]));
     }
 
     /** @test */
     public function find_with_subclass()
     {
-        $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(only: Model::class)));
-        $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(only: Model::class)));
+        $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(['only' => Model::class])));
+        $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(['only' => Model::class])));
     }
 
     /** @test */
     public function find_with_multiple_class()
     {
-        $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(only: [Person::class, PersonUuid::class])));
-        $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(only: [Person::class, PersonUuid::class])));
+        $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(['only' => [Person::class, PersonUuid::class]])));
+        $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(['only' => [Person::class, PersonUuid::class]])));
     }
 
     /** @test */
     public function find_with_multiple_class_no_match()
     {
-        $this->assertNull($this->personGid->locate(only: [GlobalId::class, PersonUuid::class]));
-        $this->assertNull($this->uuidPersonGid->locate(only: [Person::class, GlobalId::class]));
+        $this->assertNull($this->personGid->locate(['only' => [GlobalId::class, PersonUuid::class]]));
+        $this->assertNull($this->uuidPersonGid->locate(['only' => [Person::class, GlobalId::class]]));
     }
 
     /** @test */
