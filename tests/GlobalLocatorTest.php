@@ -13,6 +13,7 @@ use Tonysm\GlobalId\Locators\LocatorContract;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\Stubs\Models\PersonUuid;
+use Tonysm\GlobalId\Tests\Stubs\NonModelPerson;
 
 class GlobalLocatorTest extends TestCase
 {
@@ -384,6 +385,88 @@ class GlobalLocatorTest extends TestCase
         $this->assertCount(2, $found);
         $this->assertNull($found[0]);
         $this->assertTrue($found[1]->is($p2));
+    }
+
+    /** @test */
+    public function can_locate_non_models()
+    {
+        $p1 = new NonModelPerson(1);
+
+        $found = Locator::locate(GlobalId::create($p1));
+
+        $this->assertTrue($p1->is($found));
+    }
+
+    /** @test */
+    public function can_locate_many_non_models()
+    {
+        $p1 = new NonModelPerson(1);
+        $p2 = new NonModelPerson(2);
+
+        $found = Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2)]);
+
+        $this->assertCount(2, $found);
+        $this->assertTrue($p1->is($found[0]));
+        $this->assertTrue($p2->is($found[1]));
+    }
+
+    /** @test */
+    public function can_locate_sgid_from_non_model()
+    {
+        $p1 = new NonModelPerson(1);
+
+        $found = Locator::locateSigned(SignedGlobalId::create($p1));
+
+        $this->assertTrue($p1->is($found));
+    }
+
+    /** @test */
+    public function can_locate_many_sgid_from_non_models()
+    {
+        $p1 = new NonModelPerson(1);
+        $p2 = new NonModelPerson(2);
+
+        $found = Locator::locateManySigned([SignedGlobalId::create($p1), SignedGlobalId::create($p2)]);
+
+        $this->assertCount(2, $found);
+        $this->assertTrue($p1->is($found[0]));
+        $this->assertTrue($p2->is($found[1]));
+    }
+
+    /** @test */
+    public function locating_missing_non_models_return_null()
+    {
+        $p1 = new NonModelPerson(NonModelPerson::MISSING_PERSON_ID);
+
+        $found = Locator::locate(GlobalId::create($p1));
+
+        $this->assertNull($found);
+    }
+
+    /** @test */
+    public function locating_many_with_missing_non_models_throws_exception()
+    {
+        $p1 = new NonModelPerson(NonModelPerson::MISSING_PERSON_ID);
+        $p2 = new NonModelPerson(2);
+
+        $this->expectException(LocatorException::class);
+
+        Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2)]);
+    }
+
+    /** @test */
+    public function locating_many_with_missing_non_models_ignoring()
+    {
+        $p1 = new NonModelPerson(NonModelPerson::MISSING_PERSON_ID);
+        $p2 = new NonModelPerson(2);
+
+        $found = Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2)], [
+            'ignore_missing' => true,
+        ]);
+
+        $this->assertCount(2, $found);
+        $this->assertNull($found[0]);
+        $this->assertTrue($p2->is($found[1]));
     }
 
     private function withApp($app, callable $callback)

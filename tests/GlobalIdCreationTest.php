@@ -7,12 +7,14 @@ use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\GlobalIdException;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\Stubs\Models\PersonUuid;
+use Tonysm\GlobalId\Tests\Stubs\NonModelPerson;
 
 class GlobalIdCreationTest extends TestCase
 {
     private string $uuid;
     private GlobalId $personGid;
     private GlobalId $uuidPersonGid;
+    private GlobalId $nonModelPersonGid;
 
     public function setUp(): void
     {
@@ -21,6 +23,7 @@ class GlobalIdCreationTest extends TestCase
         $this->uuid = '8d618861-964f-4fdd-a636-5af844fa92ee';
         $this->personGid = GlobalId::create(Person::create(['name' => 'testing']));
         $this->uuidPersonGid = GlobalId::create(PersonUuid::create(['id' => $this->uuid, 'name' => 'uuid']));
+        $this->nonModelPersonGid = GlobalId::create(new NonModelPerson(1));
     }
 
     /** @test */
@@ -28,6 +31,7 @@ class GlobalIdCreationTest extends TestCase
     {
         $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate()));
         $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate()));
+        $this->assertTrue(NonModelPerson::find(1)->is($this->nonModelPersonGid->locate()));
     }
 
     /** @test */
@@ -93,6 +97,7 @@ class GlobalIdCreationTest extends TestCase
     {
         $this->assertEquals(Person::class, $this->personGid->modelName());
         $this->assertEquals(PersonUuid::class, $this->uuidPersonGid->modelName());
+        $this->assertEquals(NonModelPerson::class, $this->nonModelPersonGid->modelName());
     }
 
     /** @test */
