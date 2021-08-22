@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Tonysm\GlobalId\Exceptions\LocatorException;
 use Tonysm\GlobalId\GlobalId;
-use Tonysm\GlobalId\GlobalIdException;
+use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\Locators\LocatorContract;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;

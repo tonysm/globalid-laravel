@@ -1,6 +1,6 @@
 <?php
 
-namespace Tonysm\GlobalId;
+namespace Tonysm\GlobalId\Exceptions;
 
 use RuntimeException;
 use Throwable;

@@ -4,6 +4,7 @@ namespace Tonysm\GlobalId;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\Locators\BaseLocator;
 use Tonysm\GlobalId\Locators\LocatorContract;
 use Tonysm\GlobalId\URI\GID;

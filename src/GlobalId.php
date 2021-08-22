@@ -5,6 +5,7 @@ namespace Tonysm\GlobalId;
 use Facades\Tonysm\GlobalId\Locator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\URI\GID;
 use Tonysm\GlobalId\URI\GIDParsingException;
 
