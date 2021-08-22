@@ -4,7 +4,7 @@ namespace Tonysm\GlobalId\Tests\Stubs;
 
 class NonModelPerson
 {
-    const MISSING_PERSON_ID = 100;
+    public const MISSING_PERSON_ID = 100;
 
     public function __construct(private $id)
     {
