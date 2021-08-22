@@ -5,7 +5,7 @@ namespace Tonysm\GlobalId\Models;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\SignedGlobalId;
 
-trait GlobalIdentification
+trait HasGlobalIdentification
 {
     public function toGlobalId(array $options = []): GlobalId
     {
