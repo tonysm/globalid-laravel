@@ -369,6 +369,23 @@ class GlobalLocatorTest extends TestCase
         Locator::locateMany([$p1->toGlobalId()->toString(), $p2->toGlobalId()->toString()]);
     }
 
+    /** @test */
+    public function by_many_with_one_record_missing_can_ignore()
+    {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = Person::create(['name' => 'second']);
+
+        $p1->delete();
+
+        $found = Locator::locateMany([$p1->toGlobalId()->toString(), $p2->toGlobalId()->toString()], [
+            'ignore_missing' => true,
+        ]);
+
+        $this->assertCount(2, $found);
+        $this->assertNull($found[0]);
+        $this->assertTrue($found[1]->is($p2));
+    }
+
     private function withApp($app, callable $callback)
     {
         $oldApp = GlobalId::$app;

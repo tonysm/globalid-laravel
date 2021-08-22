@@ -51,7 +51,7 @@ class FakeVerifier extends Verifier
         return [];
     }
 
-    public function generate(array $data): string
+    public function generate($data): string
     {
         return 'mocked';
     }

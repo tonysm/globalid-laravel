@@ -9,5 +9,5 @@ interface LocatorContract
 {
     public function locate(GlobalId $globalId);
 
-    public function locateMany(Collection $globalIds): Collection;
+    public function locateMany(Collection $globalIds, array $options = []): Collection;
 }

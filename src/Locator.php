@@ -38,7 +38,7 @@ class Locator
     public function locateMany($gids, array $options = []): Collection
     {
         if ($allowedGlobalIds = $this->parseAllowed($gids, $options)) {
-            return $this->locatorFor($allowedGlobalIds->first())->locateMany($allowedGlobalIds);
+            return $this->locatorFor($allowedGlobalIds->first())->locateMany($allowedGlobalIds, $options);
         }
 
         return collect();
