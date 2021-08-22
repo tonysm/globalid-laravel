@@ -83,9 +83,7 @@ class GlobalId
 
     public function locate(array $options = [])
     {
-        $locator = fn (GlobalId $globalId, array $options = []) => Locator::locate($globalId, $options);
-
-        return $locator($this, $options);
+        return Locator::locate($this, $options);
     }
 
     public function app(): string
@@ -121,7 +119,6 @@ class GlobalId
     public function toParam(): string
     {
         // Remove any = sign at the end of the base64 string. We'll remove it back when parsing.
-
         return preg_replace('/=+$/', '', base64_encode($this->toString()));
     }
 }
