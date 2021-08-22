@@ -33,7 +33,7 @@ class UriGidTest extends TestCase
     /** @test */
     public function returns_invalid_gid_when_not_checking()
     {
-        $this->markTestSkipped('Dont know how to implement this yet.');
+        $this->assertNotNull(new GID('', '', '', []));
     }
 
     /** @test */
