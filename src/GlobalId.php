@@ -19,7 +19,11 @@ class GlobalId
         static::$app = GID::validateAppName($app);
     }
 
-    public static function create(Model $model, array $options = []): static
+    /**
+     * @param Model $model
+     * @param array $options
+     */
+    public static function create($model, array $options = []): static
     {
         $app = Arr::get($options, 'app', static::$app);
 

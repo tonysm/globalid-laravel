@@ -58,7 +58,12 @@ class GID
         return static::parse("gid://{$app}/Model/1")->app;
     }
 
-    public static function create(string $app, Model $model, array $params = []): self
+    /**
+     * @param string $app
+     * @param Model $model
+     * @param array $params
+     */
+    public static function create(string $app, $model, array $params = []): self
     {
         return new self($app, $model::class, (string) $model->getKey(), $params);
     }
