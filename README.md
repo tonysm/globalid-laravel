@@ -34,13 +34,13 @@ Add the `HasGlobalIdentification` trait into any model with a `find($id)`, `find
 
 ```php
 $personGid = Person::find(1)->toGlobalId();
-# => #<GlobalID ...
+# => Tonysm\GlobalId\GlobalId {#5010}
 
 $personGid->toString();
-# => "gid://app/App\\Models\\Person/1"
+# => "gid://laravel/App%5CModels%5CPerson/1"
 
-Tonysm\GlobalId\Locator::locate($personGid)
-# => #<Person:0x007fae94bf6298 @id="1">
+Facades\Tonysm\GlobalId\Locator::locate('gid://laravel/App%5CModels%5CPerson/1')
+# => App\Models\Person {#5022 id:1...
 ```
 
 If you don't want to implement the finders methods in the model class (Eloquent already has them), see [custom locators below](#custom-locators).
@@ -51,16 +51,16 @@ For added security GlobalIDs can also be signed to ensure that the data hasn't b
 
 ```php
 $personSgid = Person::find(1)->toSignedGlobalId()
-# => #<SignedGlobalID:0x007fea1944b410>
+# => Tonysm\GlobalId\SignedGlobalId {#5005}
 
 $personSgid = Person::find(1)->toSgid()
-# => #<SignedGlobalID:0x007fea1944b410>
+# => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 $personSgid->toString()
 # => "BAhJIh5naWQ6Ly9pZGluYWlkaS9Vc2VyLzM5NTk5BjoGRVQ=--81d7358dd5ee2ca33189bb404592df5e8d11420e"
 
-Tonysm\GlobalId\Locator::locateSigned($personSgid)
-# => #<Person:0x007fae94bf6298 @id="1">
+Facades\Tonysm\GlobalId\Locator::locateSigned($personSgid)
+# => App\Models\Person {#5009 id: 1, ...
 ```
 
 **Expiration**
@@ -72,16 +72,16 @@ $expiringSgid = Document::find(5)->toSgid([
     'expires_at' => now()->addHours(2),
     'for' => 'sharing',
 ])
-# => #<SignedGlobalID:0x008fde45df8937 ...>
+# => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 # Within 2 hours...
-Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
+Facades\Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
     'for' => 'sharing',
 ]);
-# => #<Document:0x007fae94bf6298 @id="5">
+# => App\Models\Document {#5009 id: 5, ...
 
 # More than 2 hours later...
-Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
+Facades\Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
     'for' => 'sharing',
 ])
 # => null
@@ -107,11 +107,11 @@ You need to explicitly pass `['expires_at' => null]` to generate a permanent SGI
 ```php
 # Passing a false value to either expiry option turns off expiration entirely.
 $neverExpiringSgid = Document::find(5)->toSgid(['expires_at' => null])
-# => #<SignedGlobalID:0x008fde45df8937 ...>
+# => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 # Any time later...
 Tonysm\GlobalId\Locator::locateSigned($neverExpiringSgid)
-# => #<Document:0x007fae94bf6298 @id="5">
+# => App\Models\Document {#5009 id: 5, ...
 ```
 
 **Purpose**
@@ -120,10 +120,10 @@ You can even bump the security up some more by explaining what purpose a Signed 
 
 ```php
 $signupPersonSgid = Person::find(1)->toSgid(['for' => 'signup_form']);
-# => #<SignedGlobalID:0x007fea1984b520
+# => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 Tonysm\GlobalId\Locator::locateSigned($signupPersonSgid, ['for' => 'signup_form'])
-# => #<Person:0x007fae94bf6298 @id="1">
+# => App\Models\Person {#5009 id: 1, ...
 
 Tonysm\GlobalId\Locator::locateSigned($signupPersonSgid, ['for' => 'login'])
 # => null
@@ -139,14 +139,14 @@ In the case of looking up Global IDs from a database, it's only necessary to que
 
 ```php
 $gids = $users->merge($people)->sortBy('id')->map(fn ($model) => $model->toGlobalId())
-# => [#<GlobalID:0x00007ffd6a8411a0 @uri=#<URI::GID gid://app/User/1>>,
-#<GlobalID:0x00007ffd675d32b8 @uri=#<URI::GID gid://app/Student/1>>,
-#<GlobalID:0x00007ffd6a840b10 @uri=#<URI::GID gid://app/User/2>>,
-#<GlobalID:0x00007ffd675d2c28 @uri=#<URI::GID gid://app/Student/2>>,
-#<GlobalID:0x00007ffd6a840480 @uri=#<URI::GID gid://app/User/3>>,
-#<GlobalID:0x00007ffd675d2598 @uri=#<URI::GID gid://app/Student/3>>]
+# => [#<Tonysm\GlobalId\GlobalId {#5026} @gid=#GID<gid://app/User/1>>,
+#<Tonysm\GlobalId\GlobalId {#5027} @gid=#GID<gid://app/Student/1>>,
+#<Tonysm\GlobalId\GlobalId {#5028} @gid=#<GID gid://app/User/2>>,
+#<Tonysm\GlobalId\GlobalId {#5029} @gid=#<GID gid://app/Student/2>>,
+#<Tonysm\GlobalId\GlobalId {#5030} @gid=#<GID gid://app/User/3>>,
+#<Tonysm\GlobalId\GlobalId {#5031} @gid=#<GID gid://app/Student/3>>]
 
-Tonysm\GlobalId\Locator::locateMany($gids)
+Facades\Tonysm\GlobalId\Locator::locateMany($gids)
 # SELECT "users".* FROM "users" WHERE "users"."id" IN ($1, $2, $3)  [["id", 1], ["id", 2], ["id", 3]]
 # SELECT "students".* FROM "students" WHERE "students"."id" IN ($1, $2, $3)  [["id", 1], ["id", 2], ["id", 3]]
 # => [#<User id: 1>, #<Student id: 1>, #<User id: 2>, #<Student id: 2>, #<User id: 3>, #<Student id: 3>]
