@@ -3,8 +3,8 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
+use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\Stubs\Models\PersonUuid;
 use Tonysm\GlobalId\Tests\Stubs\NonModelPerson;
