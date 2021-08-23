@@ -95,7 +95,7 @@ Facades\Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
 # => null
 ```
 
-**An auto-expiry of 1 month is set by default.** You can alter that deal by with from a boot method of any service provider:
+**An auto-expiry of 1 month is set by default.** You can override this default by passing a expiration resolver Closure from any Service Provider boot method. This resolver will get called every time a SGID is created:
 
 ```php
 SignedGlobalId::useExpirationResolver(() => now()->addMonths(3));
