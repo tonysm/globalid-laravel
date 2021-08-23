@@ -30,7 +30,7 @@ Another example is a drop-down list of options, consisting of both Users and Gro
 
 ## Usage
 
-Add the `HasGlobalIdentification` trait into any model with a `::find($id)` and `findMany($ids)` static methods.
+Add the `HasGlobalIdentification` trait into any model with a `find($id)`, `findMany($ids): Collection` static methods, and a `getKey()` instance method.
 
 ```php
 $personGid = Person::find(1)->toGlobalId();
