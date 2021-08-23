@@ -19,7 +19,7 @@ Identify app models with a URI. _heavily inspired by the [globalid gem](https://
 A Global ID is an app wide URI that uniquely identifies a model instance:
 
 ```
-gid://YourApp/Some::Model/id
+gid://YourApp/Some\\Model/id
 ```
 
 This is helpful when you need a single identifier to reference different classes of objects.
