@@ -43,6 +43,8 @@ Tonysm\GlobalId\Locator::locate($personGid)
 # => #<Person:0x007fae94bf6298 @id="1">
 ```
 
+If you don't want to implement the finders methods in the model class (Eloquent already has them), see [custom locators below](#custom-locators).
+
 ### Signed Global IDs
 
 For added security GlobalIDs can also be signed to ensure that the data hasn't been tampered with.
@@ -153,6 +155,7 @@ Tonysm\GlobalId\Locator::locateMany($gids)
 Note the order is maintained in the returned results.
 
 ### Custom App Locator
+<a name="custom-locators"></a>
 
 A custom locator can be set for an app by calling `Tonysm\GlobalId\Locator::use()` and providing an app locator to use for that app. A custom app locator is useful when different apps collaborate and reference each others' Global IDs. When finding a Global ID's model, the locator to use is based on the app name provided in the Global ID url.
 
