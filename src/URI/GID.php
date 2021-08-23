@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 
 class GID
 {
-    const ALPHANUMS_ONLY = '#^[a-zA-Z0-9\-]*$#';
+    public const ALPHANUMS_ONLY = '#^[a-zA-Z0-9\-]*$#';
 
     public const SCHEME = 'gid';
 
