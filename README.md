@@ -28,6 +28,14 @@ One example is storing model references in places where you cannot enforce const
 
 Another example is a drop-down list of options, consisting of both Users and Groups. Normally we'd need to come up with our own ad hoc scheme to reference them. With Global IDs, we have a universal identifier that works for objects of both classes.
 
+## Installation
+
+Via Composer:
+
+```
+composer require tonysm/globalid-laravel
+```
+
 ## Usage
 
 Add the `HasGlobalIdentification` trait into any model with a `find($id)`, `findMany($ids): Collection` static methods, and a `getKey()` instance method.
