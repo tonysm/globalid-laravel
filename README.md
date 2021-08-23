@@ -12,7 +12,7 @@
     </a>
 </p>
 
-Identify app models with a URI. _heavily inspired by the [globalid gem](https://github.com/rails/globalid)_.
+Identify app models with a URI. _Heavily inspired by the [globalid gem](https://github.com/rails/globalid)_.
 
 # Global ID - Reference models by URI
 
