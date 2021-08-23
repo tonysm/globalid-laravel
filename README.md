@@ -1,17 +1,14 @@
 <p align="center" style="margin-top: 2rem; margin-bottom: 2rem;"><img src="/art/globalids-laravel-logo.svg" alt="GlobalIds Laravel" /></p>
 
 <p align="center">
-    <a href="https://github.com/tonysm/globalids-laravel/workflows/Tests/badge.svg">
-        <img src="https://img.shields.io/github/workflow/status/tonysm/globalids-laravel/Tests?label=tests" />
+    <a href="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg">
+        <img src="https://img.shields.io/github/workflow/status/tonysm/globalid-laravel/run-tests?label=tests" />
     </a>
-    <a href="https://packagist.org/packages/tonysm/globalids-laravel">
-        <img src="https://img.shields.io/packagist/dt/tonysm/globalids-laravel" alt="Total Downloads">
+    <a href="https://packagist.org/packages/tonysm/globalid-laravel">
+        <img src="https://img.shields.io/packagist/dt/tonysm/globalid-laravel" alt="Total Downloads">
     </a>
-    <a href="https://packagist.org/packages/tonysm/globalids-laravel">
-        <img src="https://img.shields.io/packagist/v/tonysm/globalids-laravel" alt="Latest Stable Version">
-    </a>
-    <a href="https://packagist.org/packages/tonysm/globalids-laravel">
-        <img src="https://img.shields.io/packagist/l/tonysm/globalids-laravel" alt="License">
+    <a href="https://packagist.org/packages/tonysm/globalid-laravel">
+        <img src="https://img.shields.io/github/license/tonysm/globalid-laravel" alt="License">
     </a>
 </p>
 
