@@ -31,6 +31,16 @@ class UriGidTest extends TestCase
     }
 
     /** @test */
+    public function allows_dash()
+    {
+        $gid = GID::parse('gid://rich-text-laravel/User/5');
+
+        $this->assertEquals('rich-text-laravel', $gid->app);
+        $this->assertEquals('User', $gid->modelName);
+        $this->assertEquals('5', $gid->modelId);
+    }
+
+    /** @test */
     public function returns_invalid_gid_when_not_checking()
     {
         $this->assertNotNull(new GID('', '', '', []));

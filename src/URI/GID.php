@@ -7,6 +7,8 @@ use Illuminate\Support\Arr;
 
 class GID
 {
+    const ALPHANUMS_ONLY = '#^[a-zA-Z0-9\-]*$#';
+
     public const SCHEME = 'gid';
 
     public static function parse($gid): self
@@ -21,7 +23,7 @@ class GID
             throw GIDParsingException::badUri();
         }
 
-        if (! isset($parsed['host']) || ! ctype_alnum($parsed['host'])) {
+        if (! isset($parsed['host']) || ! preg_match(static::ALPHANUMS_ONLY, $parsed['host'])) {
             throw GIDParsingException::invalidHost();
         }
 
