@@ -103,7 +103,7 @@ SignedGlobalId::useExpirationResolver(() => now()->addMonths(3));
 
 This way any generated SGID will use that relative expiry.
 
-It's worth noting that _expiring SGIDs are not idempotent_ because they encode the current timestamp; repeated calls to `to_sgid` will produce different results. For example, in Rails
+It's worth noting that _expiring SGIDs are not idempotent_ because they encode the current timestamp; repeated calls to `to_sgid` will produce different results. For example:
 
 ```ruby
 Document::find(5)->toSgid()->toString() == Document::find(5)->toSgid()->toString()
