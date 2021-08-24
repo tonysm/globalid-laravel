@@ -14,7 +14,7 @@ class Locator
 {
     private array $locators = [];
 
-    public function use($app, $locator = null): static
+    public function use($app, ?LocatorContract $locator = null): static
     {
         try {
             GID::validateAppName($app);

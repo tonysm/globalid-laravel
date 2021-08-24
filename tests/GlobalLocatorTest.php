@@ -2,7 +2,7 @@
 
 namespace Tonysm\GlobalId\Tests;
 
-use Facades\Tonysm\GlobalId\Locator;
+use Tonysm\GlobalId\Facades\Locator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
