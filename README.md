@@ -41,25 +41,25 @@ composer require tonysm/globalid-laravel
 Add the `HasGlobalIdentification` trait into any model with a `find($id)`, `findMany($ids): Collection` static methods, and a `getKey()` instance method.
 
 ```php
-$personGid = Person::find(1)->toGlobalId()
+$personGid = Person::find(1)->toGlobalId();
 # => Tonysm\GlobalId\GlobalId {#5010}
 
-$personGid->toString()
+$personGid->toString();
 # => "gid://laravel/App%5CModels%5CPerson/1"
 
 # Returns a URL-safe base64 encoded version of the SGID...
-$personGid->toParam()
+$personGid->toParam();
 # => "Z2lkOi8vbGFyYXZlbC9BcHAlNUNNb2RlbHMlNUNQZXJzb24vMQ"
 
-Tonysm\GlobalId\Facades\Locator::locate('gid://laravel/App%5CModels%5CPerson/1')
+Tonysm\GlobalId\Facades\Locator::locate('gid://laravel/App%5CModels%5CPerson/1');
 # => App\Models\Person {#5022 id:1...
 
 # You can also pass the base64 encoded to it and it will just work...
-Tonysm\GlobalId\Facades\Locator::locate('Z2lkOi8vbGFyYXZlbC9BcHAlNUNNb2RlbHMlNUNQZXJzb24vMQ')
+Tonysm\GlobalId\Facades\Locator::locate('Z2lkOi8vbGFyYXZlbC9BcHAlNUNNb2RlbHMlNUNQZXJzb24vMQ');
 # => App\Models\Person {#5022 id:1...
 
 # You can also call the locate method on the GlobalId object...
-$personGid->locate()
+$personGid->locate();
 # => App\Models\Person {#5022 id:1...
 ```
 
@@ -70,20 +70,20 @@ If you don't want to implement the finders methods in the model class (Eloquent 
 For added security GlobalIDs can also be signed to ensure that the data hasn't been tampered with.
 
 ```php
-$personSgid = Person::find(1)->toSignedGlobalId()
+$personSgid = Person::find(1)->toSignedGlobalId();
 # => Tonysm\GlobalId\SignedGlobalId {#5005}
 
-$personSgid = Person::find(1)->toSgid()
+$personSgid = Person::find(1)->toSgid();
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
-$personSgid->toString()
+$personSgid->toString();
 # => "BAhJIh5naWQ6Ly9pZGluYWlkaS9Vc2VyLzM5NTk5BjoGRVQ=--81d7358dd5ee2ca33189bb404592df5e8d11420e"
 
-Tonysm\GlobalId\Facades\Locator::locateSigned($personSgid)
+Tonysm\GlobalId\Facades\Locator::locateSigned($personSgid);
 # => App\Models\Person {#5009 id: 1, ...
 
 # You can also call the locate method on the SignedGlobalId object...
-$personSgid->locate()
+$personSgid->locate();
 # => App\Models\Person {#5022 id:1...
 ```
 
@@ -95,7 +95,7 @@ Signed Global IDs can expire some time in the future. This is useful if there's 
 $expiringSgid = Document::find(5)->toSgid([
     'expires_at' => now()->addHours(2),
     'for' => 'sharing',
-])
+]);
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 # Within 2 hours...
@@ -107,7 +107,7 @@ Tonysm\GlobalId\Facades\Locator::locateSigned($expiringSgid->toString(), [
 # More than 2 hours later...
 Tonysm\GlobalId\Facades\Locator::locateSigned($expiringSgid->toString(), [
     'for' => 'sharing',
-])
+]);
 # => null
 ```
 
@@ -130,11 +130,11 @@ You need to explicitly pass `['expires_at' => null]` to generate a permanent SGI
 
 ```php
 # Passing a false value to either expiry option turns off expiration entirely.
-$neverExpiringSgid = Document::find(5)->toSgid(['expires_at' => null])
+$neverExpiringSgid = Document::find(5)->toSgid(['expires_at' => null]);
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 # Any time later...
-Tonysm\GlobalId\Facades\Locator::locateSigned($neverExpiringSgid)
+Tonysm\GlobalId\Facades\Locator::locateSigned($neverExpiringSgid);
 # => App\Models\Document {#5009 id: 5, ...
 ```
 
@@ -146,10 +146,10 @@ You can even bump the security up some more by explaining what purpose a Signed 
 $signupPersonSgid = Person::find(1)->toSgid(['for' => 'signup_form']);
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
-Tonysm\GlobalId\Facades\Locator::locateSigned($signupPersonSgid, ['for' => 'signup_form'])
+Tonysm\GlobalId\Facades\Locator::locateSigned($signupPersonSgid, ['for' => 'signup_form']);
 # => App\Models\Person {#5009 id: 1, ...
 
-Tonysm\GlobalId\Facades\Locator::locateSigned($signupPersonSgid, ['for' => 'login'])
+Tonysm\GlobalId\Facades\Locator::locateSigned($signupPersonSgid, ['for' => 'login']);
 # => null
 ```
 
@@ -162,7 +162,7 @@ For instance, the default locator passes every `$modelId` per `$modelName` thus 
 In the case of looking up Global IDs from a database, it's only necessary to query once per `$modelName` as shown here:
 
 ```php
-$gids = $users->merge($students)->sortBy('id')->map(fn ($model) => $model->toGlobalId())
+$gids = $users->merge($students)->sortBy('id')->map(fn ($model) => $model->toGlobalId());
 # => [#<Tonysm\GlobalId\GlobalId {#5026} @gid=#GID<gid://app/User/1>>,
 #<Tonysm\GlobalId\GlobalId {#5027} @gid=#GID<gid://app/Student/1>>,
 #<Tonysm\GlobalId\GlobalId {#5028} @gid=#<GID gid://app/User/2>>,
@@ -170,7 +170,7 @@ $gids = $users->merge($students)->sortBy('id')->map(fn ($model) => $model->toGlo
 #<Tonysm\GlobalId\GlobalId {#5030} @gid=#<GID gid://app/User/3>>,
 #<Tonysm\GlobalId\GlobalId {#5031} @gid=#<GID gid://app/Student/3>>]
 
-Tonysm\GlobalId\Facades\Locator::locateMany($gids)
+Tonysm\GlobalId\Facades\Locator::locateMany($gids);
 # SELECT "users".* FROM "users" WHERE "users"."id" IN ($1, $2, $3)  [["id", 1], ["id", 2], ["id", 3]]
 # SELECT "students".* FROM "students" WHERE "students"."id" IN ($1, $2, $3)  [["id", 1], ["id", 2], ["id", 3]]
 # => [#<User id: 1>, #<Student id: 1>, #<User id: 2>, #<Student id: 2>, #<User id: 3>, #<Student id: 3>]
@@ -186,8 +186,10 @@ A custom locator can be set for an app by calling `Tonysm\GlobalId\Locator::use(
 Using a custom Locator:
 
 ```php
+use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Facades\Locator;
 use Tonysm\GlobalId\Locators\LocatorContract;
+use Illuminate\Support\Collection;
 
 Locator::use('foo', new class implements LocatorContract {
     public function locate(GlobalId $globalId)
