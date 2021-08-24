@@ -15,26 +15,35 @@ class Verifier
 
     public function verify(string $sgid): array
     {
-        [$encoded] = explode('--', $sgid);
+        $split = explode('--', $sgid);
 
-        $data = json_decode(base64_decode($encoded), true);
-
-        // Re-hashing it again should generate the name string.
-
-        if ($sgid !== $this->generate($data)) {
+        if (count($split) !== 2) {
             throw new InvalidSignatureException();
         }
 
-        return $data;
+        list($encoded, $signature) = $split;
+
+        $rehased = $this->hash($encoded);
+
+        if ($rehased !== $signature) {
+            throw new InvalidSignatureException();
+        }
+
+        return json_decode(base64_decode($encoded), true);
     }
 
     public function generate($data): string
     {
-        $parsed = base64_encode(json_encode($data));
+        $encoded = base64_encode(json_encode($data));
 
-        $signature = hash_hmac('sha256', $parsed, $this->key() . $this->salt);
+        $signature = $this->hash($encoded);
 
-        return "{$parsed}--{$signature}";
+        return "{$encoded}--{$signature}";
+    }
+
+    private function hash(string $encoded): string
+    {
+        return hash_hmac('sha256', $encoded, $this->key() . $this->salt);
     }
 
     private function key(): string
