@@ -47,7 +47,7 @@ $personGid = Person::find(1)->toGlobalId();
 $personGid->toString();
 # => "gid://laravel/App%5CModels%5CPerson/1"
 
-Facades\Tonysm\GlobalId\Locator::locate('gid://laravel/App%5CModels%5CPerson/1')
+Tonysm\GlobalId\Facades\Locator::locate('gid://laravel/App%5CModels%5CPerson/1')
 # => App\Models\Person {#5022 id:1...
 ```
 
@@ -67,7 +67,7 @@ $personSgid = Person::find(1)->toSgid()
 $personSgid->toString()
 # => "BAhJIh5naWQ6Ly9pZGluYWlkaS9Vc2VyLzM5NTk5BjoGRVQ=--81d7358dd5ee2ca33189bb404592df5e8d11420e"
 
-Facades\Tonysm\GlobalId\Locator::locateSigned($personSgid)
+Tonysm\GlobalId\Facades\Locator::locateSigned($personSgid)
 # => App\Models\Person {#5009 id: 1, ...
 ```
 
@@ -83,13 +83,13 @@ $expiringSgid = Document::find(5)->toSgid([
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 # Within 2 hours...
-Facades\Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
+Tonysm\GlobalId\Facades\Locator::locateSigned($expiringSgid->toString(), [
     'for' => 'sharing',
 ]);
 # => App\Models\Document {#5009 id: 5, ...
 
 # More than 2 hours later...
-Facades\Tonysm\GlobalId\Locator::locateSigned($expiringSgid->toString(), [
+Tonysm\GlobalId\Facades\Locator::locateSigned($expiringSgid->toString(), [
     'for' => 'sharing',
 ])
 # => null
@@ -118,7 +118,7 @@ $neverExpiringSgid = Document::find(5)->toSgid(['expires_at' => null])
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
 # Any time later...
-Tonysm\GlobalId\Locator::locateSigned($neverExpiringSgid)
+Tonysm\GlobalId\Facades\Locator::locateSigned($neverExpiringSgid)
 # => App\Models\Document {#5009 id: 5, ...
 ```
 
@@ -130,23 +130,23 @@ You can even bump the security up some more by explaining what purpose a Signed 
 $signupPersonSgid = Person::find(1)->toSgid(['for' => 'signup_form']);
 # => Tonysm\GlobalId\SignedGlobalId {#5026}
 
-Tonysm\GlobalId\Locator::locateSigned($signupPersonSgid, ['for' => 'signup_form'])
+Tonysm\GlobalId\Facades\Locator::locateSigned($signupPersonSgid, ['for' => 'signup_form'])
 # => App\Models\Person {#5009 id: 1, ...
 
-Tonysm\GlobalId\Locator::locateSigned($signupPersonSgid, ['for' => 'login'])
+Tonysm\GlobalId\Facades\Locator::locateSigned($signupPersonSgid, ['for' => 'login'])
 # => null
 ```
 
 ### Locating many Global IDs
 
-When needing to locate many Global IDs use `Tonysm\GlobalId\Locator->locateMany` or `Tonysm\GlobalId\Locator::locateManySigned()` for Signed Global IDs to allow loading Global IDs more efficiently.
+When needing to locate many Global IDs use `Tonysm\GlobalId\Facades\Locator->locateMany` or `Tonysm\GlobalId\Facades\Locator::locateManySigned()` for Signed Global IDs to allow loading Global IDs more efficiently.
 
-For instance, the default locator passes every `$modelId` per `$modelName` thus using `$modelName::findMany($ids)` versus `Tonysm\GlobalId\Locator->locate()`'s `$modelName::find($id)`.
+For instance, the default locator passes every `$modelId` per `$modelName` thus using `$modelName::findMany($ids)` versus `Tonysm\GlobalId\Facades\Locator->locate()`'s `$modelName::find($id)`.
 
 In the case of looking up Global IDs from a database, it's only necessary to query once per `$modelName` as shown here:
 
 ```php
-$gids = $users->merge($people)->sortBy('id')->map(fn ($model) => $model->toGlobalId())
+$gids = $users->merge($students)->sortBy('id')->map(fn ($model) => $model->toGlobalId())
 # => [#<Tonysm\GlobalId\GlobalId {#5026} @gid=#GID<gid://app/User/1>>,
 #<Tonysm\GlobalId\GlobalId {#5027} @gid=#GID<gid://app/Student/1>>,
 #<Tonysm\GlobalId\GlobalId {#5028} @gid=#<GID gid://app/User/2>>,
@@ -154,7 +154,7 @@ $gids = $users->merge($people)->sortBy('id')->map(fn ($model) => $model->toGloba
 #<Tonysm\GlobalId\GlobalId {#5030} @gid=#<GID gid://app/User/3>>,
 #<Tonysm\GlobalId\GlobalId {#5031} @gid=#<GID gid://app/Student/3>>]
 
-Facades\Tonysm\GlobalId\Locator::locateMany($gids)
+Tonysm\GlobalId\Facades\Locator::locateMany($gids)
 # SELECT "users".* FROM "users" WHERE "users"."id" IN ($1, $2, $3)  [["id", 1], ["id", 2], ["id", 3]]
 # SELECT "students".* FROM "students" WHERE "students"."id" IN ($1, $2, $3)  [["id", 1], ["id", 2], ["id", 3]]
 # => [#<User id: 1>, #<Student id: 1>, #<User id: 2>, #<Student id: 2>, #<User id: 3>, #<Student id: 3>]
@@ -170,7 +170,7 @@ A custom locator can be set for an app by calling `Tonysm\GlobalId\Locator::use(
 Using a custom Locator:
 
 ```php
-use Tonysm\GlobalId\Locator;
+use Tonysm\GlobalId\Facades\Locator;
 use Tonysm\GlobalId\Locators\LocatorContract;
 
 Locator::use('foo', new class implements LocatorContract {
