@@ -17,6 +17,8 @@ class GlobalIdServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('globalid-laravel');
+
+        $this->app->scoped(Locator::class);
     }
 
     public function boot()
