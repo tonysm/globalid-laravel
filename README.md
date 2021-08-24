@@ -83,7 +83,7 @@ Tonysm\GlobalId\Facades\Locator::locateSigned($personSgid)
 
 Signed Global IDs can expire some time in the future. This is useful if there's a resource people shouldn't have indefinite access to, like a share link.
 
-```ruby
+```php
 $expiringSgid = Document::find(5)->toSgid([
     'expires_at' => now()->addHours(2),
     'for' => 'sharing',
@@ -113,7 +113,7 @@ This way any generated SGID will use that relative expiry.
 
 It's worth noting that _expiring SGIDs are not idempotent_ because they encode the current timestamp; repeated calls to `to_sgid` will produce different results. For example:
 
-```ruby
+```php
 Document::find(5)->toSgid()->toString() == Document::find(5)->toSgid()->toString()
 # => false
 ```
