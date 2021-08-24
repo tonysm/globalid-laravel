@@ -2,12 +2,12 @@
 
 namespace Tonysm\GlobalId\Tests;
 
-use Tonysm\GlobalId\Facades\Locator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\Exceptions\LocatorException;
+use Tonysm\GlobalId\Facades\Locator;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Locators\LocatorContract;
 use Tonysm\GlobalId\SignedGlobalId;
