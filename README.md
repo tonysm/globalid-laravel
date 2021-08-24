@@ -41,13 +41,21 @@ composer require tonysm/globalid-laravel
 Add the `HasGlobalIdentification` trait into any model with a `find($id)`, `findMany($ids): Collection` static methods, and a `getKey()` instance method.
 
 ```php
-$personGid = Person::find(1)->toGlobalId();
+$personGid = Person::find(1)->toGlobalId()
 # => Tonysm\GlobalId\GlobalId {#5010}
 
-$personGid->toString();
+$personGid->toString()
 # => "gid://laravel/App%5CModels%5CPerson/1"
 
+# Returns a URL-safe base64 encoded version of the SGID...
+$personGid->toParam()
+# => "Z2lkOi8vbGFyYXZlbC9BcHAlNUNNb2RlbHMlNUNQZXJzb24vMQ"
+
 Tonysm\GlobalId\Facades\Locator::locate('gid://laravel/App%5CModels%5CPerson/1')
+# => App\Models\Person {#5022 id:1...
+
+# You can also pass the base64 encoded to it and it will just work...
+Tonysm\GlobalId\Facades\Locator::locate('Z2lkOi8vbGFyYXZlbC9BcHAlNUNNb2RlbHMlNUNQZXJzb24vMQ')
 # => App\Models\Person {#5022 id:1...
 ```
 
