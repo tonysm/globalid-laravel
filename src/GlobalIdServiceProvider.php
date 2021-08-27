@@ -16,6 +16,7 @@ class GlobalIdServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
+            ->hasConfigFile('globalid')
             ->name('globalid-laravel');
 
         $this->app->scoped(Locator::class);

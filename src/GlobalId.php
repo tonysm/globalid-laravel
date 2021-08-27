@@ -4,6 +4,7 @@ namespace Tonysm\GlobalId;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\Facades\Locator;
 use Tonysm\GlobalId\URI\GID;
@@ -11,7 +12,7 @@ use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalId
 {
-    public static $app;
+    protected static $app;
 
     protected GID $gid;
 
@@ -20,13 +21,22 @@ class GlobalId
         static::$app = GID::validateAppName($app);
     }
 
+    public static function appName(): string
+    {
+        if (! static::$app ?? false) {
+            static::useAppName(Str::slug(config('globalid.app_name')));
+        }
+
+        return static::$app;
+    }
+
     /**
      * @param Model $model
      * @param array $options
      */
     public static function create($model, array $options = []): static
     {
-        $app = Arr::get($options, 'app', static::$app);
+        $app = Arr::get($options, 'app', static::appName());
 
         if (! $app) {
             throw GlobalIdException::missingApp();

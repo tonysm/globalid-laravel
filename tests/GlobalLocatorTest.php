@@ -471,7 +471,7 @@ class GlobalLocatorTest extends TestCase
 
     private function withApp($app, callable $callback)
     {
-        $oldApp = GlobalId::$app;
+        $oldApp = GlobalId::appName();
 
         GlobalId::useAppName($app);
 
