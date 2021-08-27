@@ -2,7 +2,6 @@
 
 namespace Tonysm\GlobalId;
 
-use Illuminate\Support\Str;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
