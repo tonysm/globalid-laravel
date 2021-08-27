@@ -18,13 +18,13 @@ class GlobalId
 
     public static function useAppName(string $app): void
     {
-        static::$app = GID::validateAppName($app);
+        static::$app = Str::slug(GID::validateAppName($app));
     }
 
     public static function appName(): string
     {
         if (! static::$app ?? false) {
-            static::useAppName(Str::slug(config('globalid.app_name')));
+            static::useAppName(config('globalid.app_name'));
         }
 
         return static::$app;

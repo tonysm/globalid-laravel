@@ -21,11 +21,4 @@ class GlobalIdServiceProvider extends PackageServiceProvider
 
         $this->app->scoped(Locator::class);
     }
-
-    public function boot()
-    {
-        parent::boot();
-
-        GlobalId::useAppName(Str::slug(config('app.name')));
-    }
 }
