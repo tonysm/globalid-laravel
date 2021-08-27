@@ -2,7 +2,7 @@
 
 namespace Tonysm\GlobalId;
 
-use Facades\Tonysm\GlobalId\Locator;
+use Tonysm\GlobalId\Facades\Locator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
