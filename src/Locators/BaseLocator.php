@@ -9,6 +9,12 @@ use Tonysm\GlobalId\GlobalId;
 
 class BaseLocator implements LocatorContract
 {
+    /**
+     * Locates the entity the GlobalId refers to.
+     *
+     * @param GlobalId $globalId
+     * @return mixed
+     */
     public function locate(GlobalId $globalId)
     {
         $model = $globalId->modelName();
@@ -16,6 +22,17 @@ class BaseLocator implements LocatorContract
         return $model::find($globalId->modelId());
     }
 
+    /**
+     * Locates the intances of the given GlobalIds refers to.
+     *
+     * The options can be:
+     *  - `ignore_missing` Which should be a boolean that indicates if missing references are allowed or if it should throw an exception.
+     *
+     * @param Collection $globalIds
+     * @param array $options
+     * @return Collection
+     * @throws LocatorException
+     */
     public function locateMany(Collection $globalIds, array $options = []): Collection
     {
         $idsByModel = $globalIds->mapToGroups(fn (GlobalId $globalId) => [$globalId->modelName() => $globalId->modelId()]);
