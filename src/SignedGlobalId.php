@@ -141,7 +141,7 @@ class SignedGlobalId extends GlobalId
     /**
      * Picks the purpose from the options array or returns the default one.
      *
-     * @var array
+     * @param array $options
      * @return string
      */
     private static function pickPurpose(array $options = []): string
