@@ -208,7 +208,7 @@ After defining locators as above, URIs like `gid://foo/Person/1` will now use th
 
 ### Custom Polymorphic Types
 
-When using the ]Custom Polymorphic Types](https://laravel.com/docs/8.x/eloquent-relationships#custom-polymorphic-types) feature from Eloquent, the model name inside the GID URI will use your alias instead of the model's FQCN.
+When using the [Custom Polymorphic Types](https://laravel.com/docs/8.x/eloquent-relationships#custom-polymorphic-types) feature from Eloquent, the model name inside the GID URI will use your alias instead of the model's FQCN.
 
 ```php
 use App\Models\Person;
