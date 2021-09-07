@@ -17,7 +17,7 @@ class BaseLocator implements LocatorContract
      */
     public function locate(GlobalId $globalId)
     {
-        $model = $globalId->modelName();
+        $model = $globalId->modelClass();
 
         return $model::find($globalId->modelId());
     }
@@ -35,12 +35,12 @@ class BaseLocator implements LocatorContract
      */
     public function locateMany(Collection $globalIds, array $options = []): Collection
     {
-        $idsByModel = $globalIds->mapToGroups(fn (GlobalId $globalId) => [$globalId->modelName() => $globalId->modelId()]);
+        $idsByModel = $globalIds->mapToGroups(fn (GlobalId $globalId) => [$globalId->modelClass() => $globalId->modelId()]);
 
         $loadedByModel = $idsByModel->map(fn ($ids, $model) => $model::findMany($ids));
 
         return $globalIds->map(function (GlobalId $gid) use ($loadedByModel, $options) {
-            $found = $loadedByModel[$gid->modelName()]->find($gid->modelId());
+            $found = $loadedByModel[$gid->modelClass()]->find($gid->modelId());
 
             if (! $found && ! Arr::get($options, 'ignore_missing', false)) {
                 throw LocatorException::modelNotFoundFromLocateMany();

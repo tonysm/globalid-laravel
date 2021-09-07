@@ -93,7 +93,11 @@ class GID
      */
     public static function create(string $app, $model, array $params = []): self
     {
-        return new self($app, $model::class, (string) $model->getKey(), $params);
+        $modelClass = $model instanceof Model
+            ? $model->getMorphClass()
+            : $model::class;
+
+        return new self($app, $modelClass, (string) $model->getKey(), $params);
     }
 
     /**

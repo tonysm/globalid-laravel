@@ -2,12 +2,21 @@
 
 namespace Tonysm\GlobalId\Tests;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
+use Tonysm\GlobalId\Tests\Stubs\Models\PersonWithAlias;
 use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GlobalIdTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        Relation::morphMap([]);
+    }
+
     /** @test */
     public function value_equality()
     {
@@ -80,5 +89,21 @@ class GlobalIdTest extends TestCase
     {
         $gid = GlobalId::parse('gid://laravel/User/5?hello=world');
         $this->assertEquals('world', $gid->getParam('hello'));
+    }
+
+    /** @test */
+    public function uses_relation_aliases()
+    {
+        Relation::morphMap([
+            'person-with-alias' => PersonWithAlias::class,
+        ]);
+
+        $model = PersonWithAlias::create(['name' => 'uses model relation']);
+
+        $gid = GlobalId::create($model, [
+            'app' => 'test',
+        ]);
+
+        $this->assertEquals('gid://test/person-with-alias/1', $gid->toString());
     }
 }

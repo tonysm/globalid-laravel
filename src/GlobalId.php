@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
@@ -192,6 +193,18 @@ class GlobalId
     public function modelName(): string
     {
         return $this->gid->modelName;
+    }
+
+    /**
+     * The model class name. It handles classes using custom polymorphic types.
+     *
+     * @return string
+     */
+    public function modelClass(): string
+    {
+        $modelName = $this->modelName();
+
+        return Relation::getMorphedModel($modelName) ?: $modelName;
     }
 
     /**

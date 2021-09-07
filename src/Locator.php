@@ -48,7 +48,7 @@ class Locator
      */
     public function locate($gid, array $options = [])
     {
-        if (($gid = GlobalId::parse($gid, $options)) && $this->canFind($gid->modelName(), $options)) {
+        if (($gid = GlobalId::parse($gid, $options)) && $this->canFind($gid->modelClass(), $options)) {
             return $this->locatorFor($gid)->locate($gid);
         }
 
@@ -111,7 +111,7 @@ class Locator
     {
         return collect($globalIds)
             ->map(fn ($globalId) => GlobalId::parse($globalId))
-            ->filter(fn (GlobalId $globalId) => $this->canFind($globalId->modelName(), $options))
+            ->filter(fn (GlobalId $globalId) => $this->canFind($globalId->modelClass(), $options))
             ->values();
     }
 

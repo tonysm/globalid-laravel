@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
@@ -13,6 +14,7 @@ use Tonysm\GlobalId\Locators\LocatorContract;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\Stubs\Models\PersonUuid;
+use Tonysm\GlobalId\Tests\Stubs\Models\PersonWithAlias;
 use Tonysm\GlobalId\Tests\Stubs\NonModelPerson;
 
 class GlobalLocatorTest extends TestCase
@@ -28,6 +30,10 @@ class GlobalLocatorTest extends TestCase
         $this->model = Person::create(['name' => 'a person']);
         $this->gid = GlobalId::create($this->model);
         $this->sgid = SignedGlobalId::create($this->model);
+
+        Relation::morphMap([
+            'person-with-alias' => PersonWithAlias::class,
+        ]);
     }
 
     /** @test */
@@ -42,6 +48,13 @@ class GlobalLocatorTest extends TestCase
     {
         $found = Locator::locate($this->gid, ['only' => Person::class]);
         $this->assertTrue($this->model->is($found));
+    }
+
+    /** @test */
+    public function by_gid_with_only_with_matching_class_and_custom_polymorphic_types()
+    {
+        $found = Locator::locate(GlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])), ['only' => PersonWithAlias::class]);
+        $this->assertTrue($model->is($found));
     }
 
     /** @test */
@@ -70,6 +83,13 @@ class GlobalLocatorTest extends TestCase
     {
         $found = Locator::locate($this->gid, ['only' => [GlobalId::class, PersonUuid::class]]);
         $this->assertNull($found);
+    }
+
+    /** @test */
+    public function by_gid_with_custom_morphed_alias()
+    {
+        $found = Locator::locate(GlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])));
+        $this->assertTrue($found->is($model));
     }
 
     /** @test */
@@ -121,6 +141,20 @@ class GlobalLocatorTest extends TestCase
     }
 
     /** @test */
+    public function by_many_with_classes_using_custom_polymorphic_types()
+    {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = PersonWithAlias::create(['name' => 'second']);
+
+        $found = Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2)]);
+
+        $this->assertCount(2, $found);
+
+        $this->assertTrue($found->first()->is($p1));
+        $this->assertTrue($found->last()->is($p2));
+    }
+
+    /** @test */
     public function by_sgid()
     {
         $found = Locator::locateSigned($this->sgid);
@@ -151,6 +185,14 @@ class GlobalLocatorTest extends TestCase
     }
 
     /** @test */
+    public function by_sgid_with_custom_polymorphic_types_and_only()
+    {
+        $found = Locator::locateSigned(SignedGlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])), ['only' => PersonWithAlias::class]);
+
+        $this->assertTrue($model->is($found));
+    }
+
+    /** @test */
     public function by_sgid_with_only_multiple_types()
     {
         $found = Locator::locateSigned($this->sgid, ['only' => [Person::class, PersonUuid::class]]);
@@ -165,6 +207,14 @@ class GlobalLocatorTest extends TestCase
     }
 
     /** @test */
+    public function by_sgid_with_custom_polymorphic_types()
+    {
+        $found = Locator::locateSigned(SignedGlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])));
+
+        $this->assertTrue($model->is($found));
+    }
+
+    /** @test */
     public function by_many_sgid_of_one_class()
     {
         $found = Locator::locateSigned($this->sgid, ['only' => [Person::class, PersonUuid::class]]);
@@ -176,7 +226,7 @@ class GlobalLocatorTest extends TestCase
     public function by_many_sgid_of_mixed_classes()
     {
         $p1 = Person::create(['name' => 'first']);
-        $p2 = PersonUuid::create(['id' => (string) Str::uuid(),'name' => 'second']);
+        $p2 = PersonUuid::create(['id' => (string) Str::uuid(), 'name' => 'second']);
 
         $sgid1 = SignedGlobalId::create($p1);
         $sgid2 = SignedGlobalId::create($p2);
@@ -201,6 +251,21 @@ class GlobalLocatorTest extends TestCase
 
         $this->assertCount(1, $found);
         $this->assertTrue($found[0]->is($p1));
+    }
+
+    /** @test */
+    public function by_many_sgids_with_only_matching_classes_and_custom_polymorphic_types()
+    {
+        $p1 = Person::create(['name' => 'first']);
+        $p2 = PersonWithAlias::create(['name' => 'second']);
+
+        $sgid1 = SignedGlobalId::create($p1);
+        $sgid2 = SignedGlobalId::create($p2);
+
+        $found = Locator::locateManySigned([$sgid1, $sgid2], ['only' => PersonWithAlias::class]);
+
+        $this->assertCount(1, $found);
+        $this->assertTrue($found[0]->is($p2));
     }
 
     /** @test */
