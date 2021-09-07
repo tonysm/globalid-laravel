@@ -206,6 +206,23 @@ Locator::use('foo', new class implements LocatorContract {
 
 After defining locators as above, URIs like `gid://foo/Person/1` will now use that locator. Other apps will still keep using the default locator.
 
+### Custom Polymorphic Types
+
+When using the ]Custom Polymorphic Types](https://laravel.com/docs/8.x/eloquent-relationships#custom-polymorphic-types) feature from Eloquent, the model name inside the GID URI will use your alias instead of the model's FQCN.
+
+```php
+Relation::enforceMorphMap([
+    'person' => \App\Models\Person::class,
+]);
+
+$gid = GlogalId::create(Person::create(['name' => 'a person']), [
+    'app' => 'laravel',
+]);
+
+$gid->toString();
+# => "gid://laravel/person/1"
+```
+
 ## Testing the Package
 
 ```bash
