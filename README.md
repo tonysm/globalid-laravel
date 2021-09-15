@@ -38,7 +38,18 @@ composer require tonysm/globalid-laravel
 
 ## Usage
 
-Add the `HasGlobalIdentification` trait into any model with a `find($id)`, `findMany($ids): Collection` static methods, and a `getKey()` instance method.
+Add the `HasGlobalIdentification` trait to any Eloquent model (or any class with a `find($id)`, `findMany($ids): Collection` static methods, and a `getKey()` instance method):
+
+```php
+use Tonysm\GlobalId\Models\HasGlobalIdentification;
+
+class Person extends Model
+{
+    use HasGlobalIdentification;
+}
+```
+
+Then you can create GlobalIds and SignedGlobalIds like so:
 
 ```php
 $personGid = Person::find(1)->toGlobalId();
