@@ -74,7 +74,7 @@ $personGid->locate();
 # => App\Models\Person {#5022 id:1...
 ```
 
-If you don't want to implement the finders methods in the model class (Eloquent already has them), see [custom locators below](#custom-locators).
+You may customize the location logic using a [custom locator](#custom-locators).
 
 ### Signed Global IDs
 
