@@ -16,12 +16,6 @@
 
 Identify app models with a URI.
 
-### Inspiration
-
-Heavily inspired by the [globalid gem](https://github.com/rails/globalid).
-
-# Global ID - Reference models by URI
-
 A Global ID is an app wide URI that uniquely identifies a model instance:
 
 ```
@@ -33,6 +27,10 @@ This is helpful when you need a single identifier to reference different classes
 One example is storing model references in places where you cannot enforce constraints or cannot make use of the convenient Eloquent relationships, such as storing model references in a rich text content field. We need to reference a model object rather than serialize the object itself. We can pass a Global ID that can be used to locate the model when it's time to render the rich text content. The rendering doesn't need to know the details of model naming and IDs, just that it has a global identifier that references a model.
 
 Another example is a drop-down list of options, consisting of both Users and Groups. Normally we'd need to come up with our own ad hoc scheme to reference them. With Global IDs, we have a universal identifier that works for objects of both classes.
+
+### Inspiration
+
+Heavily inspired by the [globalid gem](https://github.com/rails/globalid).
 
 ## Installation
 
