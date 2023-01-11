@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg">
-        <img src="https://img.shields.io/github/workflow/status/tonysm/globalid-laravel/run-tests?label=run-tests" />
+        <img src="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg" />
     </a>
     <a href="https://packagist.org/packages/tonysm/globalid-laravel">
         <img src="https://img.shields.io/packagist/dt/tonysm/globalid-laravel" alt="Total Downloads">
