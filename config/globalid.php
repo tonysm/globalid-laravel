@@ -11,5 +11,5 @@ return [
      | it as "Rich Text Laravel", the GIDs will be "gid://rich-text-laravel/Model/1".
      |
      */
-    'app_name' => env('APP_NAME', 'Laravel'),
+    'app_name' => env('GLOBALID_APP_NAME', env('APP_NAME', 'Laravel')),
 ];
