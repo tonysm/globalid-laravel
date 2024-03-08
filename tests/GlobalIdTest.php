@@ -23,7 +23,7 @@ class GlobalIdTest extends TestCase
         $this->assertTrue((new GlobalId('gid://app/model/id'))->equalsTo(new GlobalId('gid://app/model/id')));
     }
 
-    public function invalidAppNames()
+    public static function invalidAppNames()
     {
         return [
             'empty name' => [

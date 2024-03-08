@@ -6,7 +6,7 @@ use Tonysm\GlobalId\Tests\TestCase;
 
 class GIDValidationTest extends TestCase
 {
-    public function invalidGids()
+    public static function invalidGids()
     {
         return [
             'missing app' => [
