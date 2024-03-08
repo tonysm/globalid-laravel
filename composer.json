@@ -18,14 +18,14 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/contracts": "^8.47|^9.0|^10.0",
+        "illuminate/contracts": "^8.47|^9.0|^10.0|^11.0",
         "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
-        "nunomaduro/collision": "^5.3|^6.0",
-        "orchestra/testbench": "^6.24|^7.0|^8.0",
-        "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.8"
+        "nunomaduro/collision": "^7.0|^8.1",
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpunit/phpunit": "^10.5",
+        "vimeo/psalm": "^5.2"
     },
     "autoload": {
         "psr-4": {
