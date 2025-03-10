@@ -96,8 +96,7 @@ class GlobalId
     public static function parse($gid, array $options = []): ?static
     {
         try {
-            return $gid instanceof static
-                ? $gid
+            return $gid instanceof static ? $gid
                 : new static($gid, $options);
         } catch (GIDParsingException) {
             return static::parseEncoded($gid, $options);
