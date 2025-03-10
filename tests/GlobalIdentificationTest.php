@@ -2,6 +2,7 @@
 
 namespace Tonysm\GlobalId\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
@@ -17,14 +18,14 @@ class GlobalIdentificationTest extends TestCase
         $this->model = Person::create(['name' => 'a model']);
     }
 
-    /** @test */
+    #[Test]
     public function creates_a_global_id_from_model()
     {
         $this->assertTrue(GlobalId::create($this->model)->equalsTo($this->model->toGlobalId()));
         $this->assertTrue(GlobalId::create($this->model)->equalsTo($this->model->toGid()));
     }
 
-    /** @test */
+    #[Test]
     public function creates_a_global_id_with_custom_params()
     {
         $this->assertTrue(GlobalId::create($this->model, ['some' => 'param'])->equalsTo($this->model->toGlobalId(['some' => 'param'])));
@@ -34,14 +35,14 @@ class GlobalIdentificationTest extends TestCase
         $this->assertFalse(GlobalId::create($this->model)->equalsTo($this->model->toGid(['some' => 'param'])));
     }
 
-    /** @test */
+    #[Test]
     public function creates_signed_global_id_from_model()
     {
         $this->assertTrue(SignedGlobalId::create($this->model)->equalsTo($this->model->toSignedGlobalId()));
         $this->assertTrue(SignedGlobalId::create($this->model)->equalsTo($this->model->toSgid()));
     }
 
-    /** @test */
+    #[Test]
     public function creates_signed_global_id_with_custom_params()
     {
         $this->assertTrue(SignedGlobalId::create($this->model, ['some' => 'param'])->equalsTo($this->model->toSignedGlobalId(['some' => 'param'])));

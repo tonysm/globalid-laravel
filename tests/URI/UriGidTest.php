@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Tests\URI;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\TestCase;
 use Tonysm\GlobalId\URI\GID;
@@ -18,19 +19,19 @@ class UriGidTest extends TestCase
     {
         parent::setUp();
 
-        $this->gidString = 'gid://laravel/' . urlencode(\Tonysm\GlobalId\Tests\Stubs\Models\Person::class). '/5';
+        $this->gidString = 'gid://laravel/' . urlencode(Person::class). '/5';
         $this->gid = GID::parse($this->gidString);
     }
 
-    /** @test */
+    #[Test]
     public function parsed()
     {
         $this->assertEquals('laravel', $this->gid->app);
-        $this->assertEquals(\Tonysm\GlobalId\Tests\Stubs\Models\Person::class, $this->gid->modelName);
+        $this->assertEquals(Person::class, $this->gid->modelName);
         $this->assertEquals('5', $this->gid->modelId);
     }
 
-    /** @test */
+    #[Test]
     public function allows_dash()
     {
         $gid = GID::parse('gid://rich-text-laravel/User/5');
@@ -40,44 +41,44 @@ class UriGidTest extends TestCase
         $this->assertEquals('5', $gid->modelId);
     }
 
-    /** @test */
+    #[Test]
     public function returns_invalid_gid_when_not_checking()
     {
         $this->assertNotNull(new GID('', '', '', []));
     }
 
-    /** @test */
+    #[Test]
     public function create()
     {
         $model = (new Person())->forceFill(['id' => 5]);
         $this->assertEquals($this->gidString, GID::create('laravel', $model)->toString());
     }
 
-    /** @test */
+    #[Test]
     public function build()
     {
-        $array = GID::build(['laravel', \Tonysm\GlobalId\Tests\Stubs\Models\Person::class, '5', null]);
+        $array = GID::build(['laravel', Person::class, '5', null]);
         $this->assertEquals($this->gidString, $array->toString());
 
-        $associativeArray = GID::build(['app' => 'laravel', 'model_name' => \Tonysm\GlobalId\Tests\Stubs\Models\Person::class, 'model_id' => '5', 'params' => null]);
+        $associativeArray = GID::build(['app' => 'laravel', 'model_name' => Person::class, 'model_id' => '5', 'params' => null]);
         $this->assertEquals($this->gidString, $associativeArray->toString());
     }
 
-    /** @test */
+    #[Test]
     public function build_with_wrong_ordered_array_creates_wrong_ordered_gid()
     {
-        $array = GID::build([\Tonysm\GlobalId\Tests\Stubs\Models\Person::class, '5', 'laravel', null]);
+        $array = GID::build([Person::class, '5', 'laravel', null]);
         $this->assertNotEquals($this->gidString, $array->toString());
     }
 
-    /** @test */
+    #[Test]
     public function to_string()
     {
         $this->assertEquals($this->gidString, $this->gid->toString());
         $this->assertEquals($this->gidString, (string) $this->gid);
     }
 
-    /** @test */
+    #[Test]
     public function equality()
     {
         $this->assertTrue($this->gid->equalsTo(GID::parse($this->gid->toString())));

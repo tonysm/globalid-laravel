@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Carbon\CarbonInterface;
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
@@ -22,7 +23,7 @@ class SignedGlobalIdExpirationTest extends TestCase
         $this->uri = GlobalId::create($this->model)->toString();
     }
 
-    /** @test */
+    #[Test]
     public function expires_at_defaults_to_class_level_expiration()
     {
         $this->withExpiration(now()->addHour(), function (): void {
@@ -36,7 +37,7 @@ class SignedGlobalIdExpirationTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function passing_in_expires_at_overrides_class_level_expiration()
     {
         $this->withExpiration(now()->addHour(), function (): void {
@@ -50,7 +51,7 @@ class SignedGlobalIdExpirationTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function passing_expires_at_less_than_a_second_is_not_expired()
     {
         $this->withExpiration(now()->addHour(), function (): void {
@@ -66,7 +67,7 @@ class SignedGlobalIdExpirationTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function passing_expires_at_null_turns_off_expiration_checking()
     {
         $this->withExpiration(now()->addHour(), function (): void {
@@ -82,7 +83,7 @@ class SignedGlobalIdExpirationTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function passing_expires_at_null_off_expiration_checking()
     {
         $date = now()->endOfDay();

@@ -2,6 +2,7 @@
 
 namespace Tonysm\GlobalId\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\Verifier;
 
 class VerifierTest extends TestCase
@@ -15,7 +16,7 @@ class VerifierTest extends TestCase
         $this->verifier = new Verifier(fn () => 'MuchSECRETsoHIDDEN', salt: 'salty');
     }
 
-    /** @test */
+    #[Test]
     public function generates()
     {
         $this->assertEquals(
@@ -24,7 +25,7 @@ class VerifierTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function verifies()
     {
         $this->assertEquals(

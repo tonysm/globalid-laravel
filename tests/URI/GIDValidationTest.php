@@ -2,6 +2,8 @@
 
 namespace Tonysm\GlobalId\Tests\URI;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\Tests\TestCase;
 use Tonysm\GlobalId\URI\GID;
 use Tonysm\GlobalId\URI\GIDParsingException;
@@ -46,10 +48,8 @@ class GIDValidationTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidGids
-     */
+    #[DataProvider('invalidGids')]
+    #[Test]
     public function invalid_gids($gid, $expectedException)
     {
         $this->expectException($expectedException);

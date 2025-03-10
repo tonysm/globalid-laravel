@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\Exceptions\LocatorException;
 use Tonysm\GlobalId\Facades\Locator;
@@ -36,63 +37,63 @@ class GlobalLocatorTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function by_gid()
     {
         $found = Locator::locate($this->gid);
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_only_with_matching_class()
     {
         $found = Locator::locate($this->gid, ['only' => Person::class]);
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_only_with_matching_class_and_custom_polymorphic_types()
     {
         $found = Locator::locate(GlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])), ['only' => PersonWithAlias::class]);
         $this->assertTrue($model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_only_as_subclass()
     {
         $found = Locator::locate($this->gid, ['only' => Model::class]);
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_only_as_no_matching_class()
     {
         $found = Locator::locate($this->gid, ['only' => PersonUuid::class]);
         $this->assertNull($found);
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_multiple_types()
     {
         $found = Locator::locate($this->gid, ['only' => [Person::class, PersonUuid::class]]);
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_multiples_types_no_matching()
     {
         $found = Locator::locate($this->gid, ['only' => [GlobalId::class, PersonUuid::class]]);
         $this->assertNull($found);
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_with_custom_morphed_alias()
     {
         $found = Locator::locate(GlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])));
         $this->assertTrue($found->is($model));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_gids_of_one_class()
     {
         $p1 = Person::create(['name' => 'first user']);
@@ -109,7 +110,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertNotNull($found[1]->is($p2));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_gids_of_mixed_classes()
     {
         $p1 = Person::create(['name' => 'first user']);
@@ -126,7 +127,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertNotNull($found[1]->is($p2));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_with_only()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -140,7 +141,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($found->first()->is($uuidP1));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_with_classes_using_custom_polymorphic_types()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -154,7 +155,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($found->last()->is($p2));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid()
     {
         $found = Locator::locateSigned($this->sgid);
@@ -162,7 +163,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_only()
     {
         $found = Locator::locateSigned($this->sgid, ['only' => Person::class]);
@@ -170,7 +171,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_only_matching_subclass()
     {
         $found = Locator::locateSigned($this->sgid, ['only' => Model::class]);
@@ -178,13 +179,13 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_only_no_matching_class()
     {
         $this->assertNull(Locator::locateSigned($this->sgid, ['only' => PersonUuid::class]));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_custom_polymorphic_types_and_only()
     {
         $found = Locator::locateSigned(SignedGlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])), ['only' => PersonWithAlias::class]);
@@ -192,7 +193,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_only_multiple_types()
     {
         $found = Locator::locateSigned($this->sgid, ['only' => [Person::class, PersonUuid::class]]);
@@ -200,13 +201,13 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_only_multiple_types_no_match()
     {
         $this->assertNull(Locator::locateSigned($this->sgid, ['only' => [GlobalId::class, PersonUuid::class]]));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_with_custom_polymorphic_types()
     {
         $found = Locator::locateSigned(SignedGlobalId::create($model = PersonWithAlias::create(['name' => 'a person'])));
@@ -214,7 +215,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_sgid_of_one_class()
     {
         $found = Locator::locateSigned($this->sgid, ['only' => [Person::class, PersonUuid::class]]);
@@ -222,7 +223,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_sgid_of_mixed_classes()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -238,7 +239,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($found[1]->is($p2));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_sgids_with_only_matching_subclass()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -253,7 +254,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($found[0]->is($p1));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_sgids_with_only_matching_classes_and_custom_polymorphic_types()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -268,21 +269,21 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($found[0]->is($p2));
     }
 
-    /** @test */
+    #[Test]
     public function by_gid_string()
     {
         $found = Locator::locate($this->gid->toString());
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_sgid_string()
     {
         $found = Locator::locateSigned($this->sgid->toString());
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_many_sgid_strings_with_for_restriction_to_matching_purpose()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -302,26 +303,26 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($p1->is($found->first()));
     }
 
-    /** @test */
+    #[Test]
     public function by_to_param()
     {
         $found = Locator::locate($this->gid->toParam());
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_non_gid_returns_null()
     {
         $this->assertNull(Locator::locate('This should fail'));
     }
 
-    /** @test */
+    #[Test]
     public function by_non_sgid_returns_null()
     {
         $this->assertNull(Locator::locateSigned('This is not a SGID'));
     }
 
-    /** @test */
+    #[Test]
     public function by_invalid_gid_uri_returns_null()
     {
         $this->assertNull(Locator::locate('http://app/Person/1'));
@@ -330,7 +331,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertNull(Locator::locate('gid://app/Person/1/2'));
     }
 
-    /** @test */
+    #[Test]
     public function use_locator()
     {
         Locator::use('foo', new class () implements LocatorContract {
@@ -351,7 +352,7 @@ class GlobalLocatorTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function use_locator_app_is_case_insensitive()
     {
         Locator::use('foo', new class () implements LocatorContract {
@@ -372,7 +373,7 @@ class GlobalLocatorTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function use_locator_app_cannot_have_underscore()
     {
         $this->expectException(GlobalIdException::class);
@@ -390,7 +391,7 @@ class GlobalLocatorTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function by_valid_purpose_returns_right_model()
     {
         $gid = $this->model->toGlobalId(['for' => 'login']);
@@ -401,7 +402,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_valid_purpose_with_sgid_returns_right_model()
     {
         $sgid = $this->model->toSignedGlobalId(['for' => 'login']);
@@ -412,7 +413,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($this->model->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function by_invalid_purpose_with_sgid_returns_null()
     {
         $sgid = $this->model->toSignedGlobalId(['for' => 'login']);
@@ -422,7 +423,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertNull($found);
     }
 
-    /** @test */
+    #[Test]
     public function by_many_with_one_record_missing()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -435,7 +436,7 @@ class GlobalLocatorTest extends TestCase
         Locator::locateMany([$p1->toGlobalId()->toString(), $p2->toGlobalId()->toString()]);
     }
 
-    /** @test */
+    #[Test]
     public function by_many_with_one_record_missing_can_ignore()
     {
         $p1 = Person::create(['name' => 'first']);
@@ -452,7 +453,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($found[1]->is($p2));
     }
 
-    /** @test */
+    #[Test]
     public function can_locate_non_models()
     {
         $p1 = new NonModelPerson(1);
@@ -462,7 +463,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($p1->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function can_locate_many_non_models()
     {
         $p1 = new NonModelPerson(1);
@@ -475,7 +476,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($p2->is($found[1]));
     }
 
-    /** @test */
+    #[Test]
     public function can_locate_sgid_from_non_model()
     {
         $p1 = new NonModelPerson(1);
@@ -485,7 +486,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($p1->is($found));
     }
 
-    /** @test */
+    #[Test]
     public function can_locate_many_sgid_from_non_models()
     {
         $p1 = new NonModelPerson(1);
@@ -498,7 +499,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertTrue($p2->is($found[1]));
     }
 
-    /** @test */
+    #[Test]
     public function locating_missing_non_models_return_null()
     {
         $p1 = new NonModelPerson(NonModelPerson::MISSING_PERSON_ID);
@@ -508,7 +509,7 @@ class GlobalLocatorTest extends TestCase
         $this->assertNull($found);
     }
 
-    /** @test */
+    #[Test]
     public function locating_many_with_missing_non_models_throws_exception()
     {
         $p1 = new NonModelPerson(NonModelPerson::MISSING_PERSON_ID);
@@ -519,7 +520,7 @@ class GlobalLocatorTest extends TestCase
         Locator::locateMany([GlobalId::create($p1), GlobalId::create($p2)]);
     }
 
-    /** @test */
+    #[Test]
     public function locating_many_with_missing_non_models_ignoring()
     {
         $p1 = new NonModelPerson(NonModelPerson::MISSING_PERSON_ID);
