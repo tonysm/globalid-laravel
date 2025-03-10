@@ -1,8 +1,10 @@
 <?php
 
-namespace Tonysm\GlobalId\URI;
+namespace Tonysm\GlobalId\Tests\URI;
 
 use Tonysm\GlobalId\Tests\TestCase;
+use Tonysm\GlobalId\URI\GID;
+use Tonysm\GlobalId\URI\GIDParsingException;
 
 class GIDValidationTest extends TestCase
 {
