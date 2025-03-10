@@ -30,13 +30,13 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        Schema::create('people', function (Blueprint $table) {
+        Schema::create('people', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
 
-        Schema::create('uuid_people', function (Blueprint $table) {
+        Schema::create('uuid_people', function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->string('name');
             $table->timestamps();

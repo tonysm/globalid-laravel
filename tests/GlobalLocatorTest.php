@@ -345,7 +345,7 @@ class GlobalLocatorTest extends TestCase
             }
         });
 
-        $this->withApp('foo', function () {
+        $this->withApp('foo', function (): void {
             $this->assertEquals('mocked', Locator::locate('gid://foo/Person/1'));
             $this->assertEquals('mocked', Locator::locateMany(['gid://foo/Person/1'])->first());
         });
@@ -366,7 +366,7 @@ class GlobalLocatorTest extends TestCase
             }
         });
 
-        $this->withApp('foo', function () {
+        $this->withApp('foo', function (): void {
             $this->assertEquals('mocked', Locator::locate('gid://FOo/Person/1'));
             $this->assertEquals('mocked', Locator::locateMany(['gid://FoO/Person/1'])->first());
         });
