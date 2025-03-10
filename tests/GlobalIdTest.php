@@ -41,11 +41,11 @@ class GlobalIdTest extends TestCase
      * @test
      * @dataProvider invalidAppNames
      */
-    public function invalid_app_name($app, $expectedException)
+    public function invalid_app_name($app_name, $expectedException)
     {
         $this->expectException($expectedException);
 
-        GlobalId::useAppName($app);
+        GlobalId::useAppName($app_name);
     }
 
     /** @test */
