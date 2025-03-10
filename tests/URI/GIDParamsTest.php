@@ -36,6 +36,6 @@ class GIDParamsTest extends TestCase
     /** @test */
     public function to_string()
     {
-        $this->assertEquals('gid://laravel/'.urlencode('Tonysm\\GlobalId\\Tests\\Stubs\\Models\\Person').'/5?hello=world', $this->gid->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(\Tonysm\GlobalId\Tests\Stubs\Models\Person::class).'/5?hello=world', $this->gid->toString());
     }
 }

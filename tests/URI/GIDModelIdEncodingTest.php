@@ -14,7 +14,7 @@ class GIDModelIdEncodingTest extends TestCase
         $model = (new Person())->forceFill(['id' => 'John123']);
         $model->incrementing = false;
 
-        $this->assertEquals('gid://laravel/'.urlencode('Tonysm\\GlobalId\\Tests\\Stubs\\Models\\Person').'/John123', GID::create('laravel', $model)->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(\Tonysm\GlobalId\Tests\Stubs\Models\Person::class).'/John123', GID::create('laravel', $model)->toString());
     }
 
     /** @test */
@@ -23,7 +23,7 @@ class GIDModelIdEncodingTest extends TestCase
         $model = (new Person())->forceFill(['id' => 'John Doe 123/Ipsum']);
         $model->incrementing = false;
 
-        $this->assertEquals('gid://laravel/'.urlencode('Tonysm\\GlobalId\\Tests\\Stubs\\Models\\Person').'/'. urlencode('John Doe 123/Ipsum'), GID::create('laravel', $model)->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(\Tonysm\GlobalId\Tests\Stubs\Models\Person::class).'/'. urlencode('John Doe 123/Ipsum'), GID::create('laravel', $model)->toString());
     }
 
     /** @test */
