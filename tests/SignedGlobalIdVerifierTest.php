@@ -2,6 +2,7 @@
 
 namespace Tonysm\GlobalId\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\SignedGlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
@@ -19,7 +20,7 @@ class SignedGlobalIdVerifierTest extends TestCase
         $this->sgid = SignedGlobalId::create($this->model);
     }
 
-    /** @test */
+    #[Test]
     public function create_accepts_a_verifier()
     {
         $sgid = SignedGlobalId::create($this->model, [
@@ -29,7 +30,7 @@ class SignedGlobalIdVerifierTest extends TestCase
         $this->assertEquals('mocked', $sgid->toString());
     }
 
-    /** @test */
+    #[Test]
     public function new_accepts_a_verifier()
     {
         $sgid = new SignedGlobalId(GlobalId::create($this->model)->toString(), [

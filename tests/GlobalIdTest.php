@@ -3,6 +3,8 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 use Tonysm\GlobalId\Tests\Stubs\Models\PersonWithAlias;
@@ -17,7 +19,7 @@ class GlobalIdTest extends TestCase
         Relation::morphMap([]);
     }
 
-    /** @test */
+    #[Test]
     public function value_equality()
     {
         $this->assertTrue((new GlobalId('gid://app/model/id'))->equalsTo(new GlobalId('gid://app/model/id')));
@@ -37,18 +39,16 @@ class GlobalIdTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider invalidAppNames
-     */
-    public function invalid_app_name($app, $expectedException)
+    #[DataProvider('invalidAppNames')]
+    #[Test]
+    public function invalid_app_name($app_name, $expectedException)
     {
         $this->expectException($expectedException);
 
-        GlobalId::useAppName($app);
+        GlobalId::useAppName($app_name);
     }
 
-    /** @test */
+    #[Test]
     public function param_parsing()
     {
         $model = Person::make()->forceFill(['id' => 5]);
@@ -57,7 +57,7 @@ class GlobalIdTest extends TestCase
         $this->assertTrue(GlobalId::parse($gid->toParam())->equalsTo($gid));
     }
 
-    /** @test */
+    #[Test]
     public function find_with_param()
     {
         $model = Person::create(['name' => 'Test']);
@@ -69,14 +69,14 @@ class GlobalIdTest extends TestCase
         $this->assertEquals($gid->modelId(), $found->id);
     }
 
-    /** @test */
+    #[Test]
     public function create_custom_params()
     {
         $gid = GlobalId::create(Person::create(['name' => 'custom']), ['hello' => 'world']);
         $this->assertEquals('world', $gid->getParam('hello'));
     }
 
-    /** @test */
+    #[Test]
     public function custom_params_ignore_app()
     {
         $gid = GlobalId::create(Person::create(['name' => 'custom']), ['app' => 'test', 'hello' => 'world']);
@@ -84,14 +84,14 @@ class GlobalIdTest extends TestCase
         $this->assertEquals(null, $gid->getParam('app'));
     }
 
-    /** @test */
+    #[Test]
     public function parse_custom_param()
     {
         $gid = GlobalId::parse('gid://laravel/User/5?hello=world');
         $this->assertEquals('world', $gid->getParam('hello'));
     }
 
-    /** @test */
+    #[Test]
     public function uses_relation_aliases()
     {
         Relation::morphMap([

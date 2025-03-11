@@ -3,6 +3,7 @@
 namespace Tonysm\GlobalId\Tests;
 
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\Attributes\Test;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
 use Tonysm\GlobalId\GlobalId;
 use Tonysm\GlobalId\Tests\Stubs\Models\Person;
@@ -26,7 +27,7 @@ class GlobalIdCreationTest extends TestCase
         $this->nonModelPersonGid = GlobalId::create(new NonModelPerson(1));
     }
 
-    /** @test */
+    #[Test]
     public function find()
     {
         $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate()));
@@ -34,42 +35,42 @@ class GlobalIdCreationTest extends TestCase
         $this->assertTrue(NonModelPerson::find(1)->is($this->nonModelPersonGid->locate()));
     }
 
-    /** @test */
+    #[Test]
     public function find_with_class()
     {
         $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(['only' => Person::class])));
         $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(['only' => PersonUuid::class])));
     }
 
-    /** @test */
+    #[Test]
     public function find_with_class_no_match()
     {
         $this->assertNull($this->personGid->locate(['only' => PersonUuid::class]));
         $this->assertNull($this->uuidPersonGid->locate(['only' => Person::class]));
     }
 
-    /** @test */
+    #[Test]
     public function find_with_subclass()
     {
         $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(['only' => Model::class])));
         $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(['only' => Model::class])));
     }
 
-    /** @test */
+    #[Test]
     public function find_with_multiple_class()
     {
         $this->assertTrue(Person::find($this->personGid->modelId())->is($this->personGid->locate(['only' => [Person::class, PersonUuid::class]])));
         $this->assertTrue(PersonUuid::find($this->uuidPersonGid->modelId())->is($this->uuidPersonGid->locate(['only' => [Person::class, PersonUuid::class]])));
     }
 
-    /** @test */
+    #[Test]
     public function find_with_multiple_class_no_match()
     {
         $this->assertNull($this->personGid->locate(['only' => [GlobalId::class, PersonUuid::class]]));
         $this->assertNull($this->uuidPersonGid->locate(['only' => [Person::class, GlobalId::class]]));
     }
 
-    /** @test */
+    #[Test]
     public function to_string()
     {
         $this->assertEquals('gid://laravel/'.urlencode(Person::class). '/1', $this->personGid->toString());
@@ -78,21 +79,21 @@ class GlobalIdCreationTest extends TestCase
         $this->assertEquals('gid://laravel/'.urlencode(PersonUuid::class). '/' . $this->uuid, (string) $this->uuidPersonGid->toString());
     }
 
-    /** @test */
+    #[Test]
     public function to_params()
     {
         $this->assertEquals('Z2lkOi8vbGFyYXZlbC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb24vMQ', $this->personGid->toParam());
         $this->assertEquals('Z2lkOi8vbGFyYXZlbC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25VdWlkLzhkNjE4ODYxLTk2NGYtNGZkZC1hNjM2LTVhZjg0NGZhOTJlZQ', $this->uuidPersonGid->toParam());
     }
 
-    /** @test */
+    #[Test]
     public function model_id()
     {
         $this->assertEquals('1', $this->personGid->modelId());
         $this->assertEquals($this->uuid, $this->uuidPersonGid->modelId());
     }
 
-    /** @test */
+    #[Test]
     public function model_name()
     {
         $this->assertEquals(Person::class, $this->personGid->modelName());
@@ -100,7 +101,7 @@ class GlobalIdCreationTest extends TestCase
         $this->assertEquals(NonModelPerson::class, $this->nonModelPersonGid->modelName());
     }
 
-    /** @test */
+    #[Test]
     public function app_option()
     {
         $personGid = GlobalId::create($model = Person::create(['name' => 'lorem']));
@@ -116,7 +117,7 @@ class GlobalIdCreationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function fails_when_app_options_is_null()
     {
         $this->expectException(GlobalIdException::class);
@@ -124,7 +125,7 @@ class GlobalIdCreationTest extends TestCase
         GlobalId::create(Person::create(['name' => 'lorem']), ['app' => null]);
     }
 
-    /** @test */
+    #[Test]
     public function equality()
     {
         $p1 = Person::create(['name' => 'first']);
