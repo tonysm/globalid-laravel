@@ -12,7 +12,7 @@ class SignedGlobalIdVerifierTest extends TestCase
 {
     private Person $model;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -24,7 +24,7 @@ class SignedGlobalIdVerifierTest extends TestCase
     public function create_accepts_a_verifier()
     {
         $sgid = SignedGlobalId::create($this->model, [
-            'verifier' => new FakeVerifier(),
+            'verifier' => new FakeVerifier,
         ]);
 
         $this->assertEquals('mocked', $sgid->toString());
@@ -34,7 +34,7 @@ class SignedGlobalIdVerifierTest extends TestCase
     public function new_accepts_a_verifier()
     {
         $sgid = new SignedGlobalId(GlobalId::create($this->model)->toString(), [
-            'verifier' => new FakeVerifier(),
+            'verifier' => new FakeVerifier,
         ]);
 
         $this->assertEquals('mocked', $sgid->toString());
@@ -43,9 +43,7 @@ class SignedGlobalIdVerifierTest extends TestCase
 
 class FakeVerifier extends Verifier
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function verify($sgid): array
     {

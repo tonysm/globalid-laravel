@@ -24,17 +24,12 @@ class GlobalId
 
     /**
      * The GID instance for a GlobalId.
-     *
-     * @var GID
      */
     protected GID $gid;
 
     /**
      * Sets the default app name to be used when creating new
      * GlobalIds without specific app names.
-     *
-     * @param string $app
-     * @return void
      */
     public static function useAppName(string $app): void
     {
@@ -45,8 +40,6 @@ class GlobalId
      * Returns the default app name. When the default app name
      * is not set by package consumers, it will default to
      * the app name defined in the Laravel application.
-     *
-     * @return string
      */
     public static function appName(): string
     {
@@ -67,8 +60,7 @@ class GlobalId
      *  - `expires_at`: To define the expiration date for the Signed Global ID.
      *  - Anything else will be kept as param (query strings) in the GlobalId URI.
      *
-     * @param Model $model
-     * @param array $options
+     * @param  Model  $model
      */
     public static function create($model, array $options = []): static
     {
@@ -89,8 +81,7 @@ class GlobalId
      * it into an instance of the GlobalId class, which can be
      * used to locate the entity this GlobalId refers to.
      *
-     * @param GlobalId|string $gid
-     * @param array $options
+     * @param  GlobalId|string  $gid
      * @return GlobalId|null
      */
     public static function parse($gid, array $options = []): ?static
@@ -106,8 +97,7 @@ class GlobalId
     /**
      * Parses a Base64 encoded version of the Global ID.
      *
-     * @param string $gid
-     * @param array $options
+     * @param  string  $gid
      * @return GlobalId|null
      */
     protected static function parseEncoded($gid, array $options = []): ?static
@@ -126,9 +116,6 @@ class GlobalId
     /**
      * We remove the equal signs `=` at the end of the Base64 string for
      * the GlobalId. We're adding them back here so we can decode it.
-     *
-     * @param string $gid
-     * @return string
      */
     protected static function repadGid(string $gid): string
     {
@@ -141,8 +128,7 @@ class GlobalId
     /**
      * Parses and locates the entity a GlobalId refers to.
      *
-     * @param GlobalId|string $gid
-     * @param array $options
+     * @param  GlobalId|string  $gid
      * @return mixed The entity the Global ID refers to
      */
     public static function find($gid, array $options = [])
@@ -153,8 +139,7 @@ class GlobalId
     /**
      * Creates a new instance.
      *
-     * @param GID|string $gid
-     * @param array $options
+     * @param  GID|string  $gid
      */
     public function __construct($gid, array $options = [])
     {
@@ -166,7 +151,6 @@ class GlobalId
     /**
      * Locates the entity this GlobalId refers to.
      *
-     * @param array $options
      * @return mixed
      */
     public function locate(array $options = [])
@@ -176,8 +160,6 @@ class GlobalId
 
     /**
      * The app name on the Global ID URI.
-     *
-     * @return string
      */
     public function app(): string
     {
@@ -186,8 +168,6 @@ class GlobalId
 
     /**
      * The model name encoded in the Global ID.
-     *
-     * @return string
      */
     public function modelName(): string
     {
@@ -196,8 +176,6 @@ class GlobalId
 
     /**
      * The model class name. It handles classes using custom polymorphic types.
-     *
-     * @return string
      */
     public function modelClass(): string
     {
@@ -208,8 +186,6 @@ class GlobalId
 
     /**
      * The model ID encoded in the Global ID.
-     *
-     * @return string
      */
     public function modelId(): string
     {
@@ -218,8 +194,6 @@ class GlobalId
 
     /**
      * Checks if two GlobalIds can be considered equal.
-     *
-     * @return bool
      */
     public function equalsTo(GlobalId $globalId): bool
     {
@@ -229,7 +203,7 @@ class GlobalId
     /**
      * Gets a param (query string) from the Global ID URI.
      *
-     * @param string $key
+     * @param  string  $key
      * @return string|null
      */
     public function getParam($key)
@@ -239,8 +213,6 @@ class GlobalId
 
     /**
      * Converts the Global ID to the URI string.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -250,8 +222,6 @@ class GlobalId
     /**
      * Converts the Global ID URI string to base64 encoded (without the
      * ending equal signs - which will be added later when parsing).
-     *
-     * @return string
      */
     public function toParam(): string
     {

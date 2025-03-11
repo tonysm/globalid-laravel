@@ -9,7 +9,7 @@ class Person extends Model
 {
     use HasGlobalIdentification;
 
-    protected $table = "people";
+    protected $table = 'people';
 
     protected $guarded = [];
 }

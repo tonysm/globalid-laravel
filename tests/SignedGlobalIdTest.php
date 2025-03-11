@@ -10,9 +10,10 @@ use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 class SignedGlobalIdTest extends TestCase
 {
     private SignedGlobalId $personSgid;
+
     private Person $model;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -13,13 +13,14 @@ class UriGidTest extends TestCase
     use RefreshDatabase;
 
     private string $gidString;
+
     private GID $gid;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->gidString = 'gid://laravel/' . urlencode(Person::class). '/5';
+        $this->gidString = 'gid://laravel/'.urlencode(Person::class).'/5';
         $this->gid = GID::parse($this->gidString);
     }
 
@@ -50,7 +51,7 @@ class UriGidTest extends TestCase
     #[Test]
     public function create()
     {
-        $model = (new Person())->forceFill(['id' => 5]);
+        $model = (new Person)->forceFill(['id' => 5]);
         $this->assertEquals($this->gidString, GID::create('laravel', $model)->toString());
     }
 

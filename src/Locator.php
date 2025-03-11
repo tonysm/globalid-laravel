@@ -22,9 +22,8 @@ class Locator
     /**
      * Configures a Locator for a specific app name.
      *
-     * @param string $app
-     * @param LocatorContract|Closure|string $locator Can be an instance of the LocatorContract, a closure or a string which can be the class name.
-     * @return static
+     * @param  string  $app
+     * @param  LocatorContract|Closure|string  $locator  Can be an instance of the LocatorContract, a closure or a string which can be the class name.
      */
     public function use($app, $locator = null): static
     {
@@ -42,8 +41,7 @@ class Locator
     /**
      * Locates the instance the Global ID refers to.
      *
-     * @param GlobalID|string $gid
-     * @param array $options
+     * @param  GlobalID|string  $gid
      * @return mixed
      */
     public function locate($gid, array $options = [])
@@ -58,9 +56,7 @@ class Locator
     /**
      * Locates multiple Global ID instances at the same time.
      *
-     * @param array<GlobalId|string>|Collection $gids
-     * @param array $options
-     * @return Collection
+     * @param  array<GlobalId|string>|Collection  $gids
      */
     public function locateMany($gids, array $options = []): Collection
     {
@@ -74,8 +70,7 @@ class Locator
     /**
      * Locates a Signed Global ID.
      *
-     * @param SignedGlobalId|string $sgid
-     * @param array $options
+     * @param  SignedGlobalId|string  $sgid
      * @return mixed
      */
     public function locateSigned($sgid, array $options = [])
@@ -86,9 +81,7 @@ class Locator
     /**
      * Locates multiple Signed Global IDs at the same time.
      *
-     * @param array<SignedGlobalId|string>|Collection $sgids
-     * @param array $options
-     * @return Collection
+     * @param  array<SignedGlobalId|string>|Collection  $sgids
      */
     public function locateManySigned($sgids, array $options = []): Collection
     {
@@ -103,9 +96,7 @@ class Locator
     /**
      * Returns only the allowed Global ID instances.
      *
-     * @param array<GlobalId|string>|Collection $globalIds
-     * @param array $options
-     * @return Collection
+     * @param  array<GlobalId|string>|Collection  $globalIds
      */
     private function parseAllowed($globalIds, array $options = []): Collection
     {
@@ -117,21 +108,16 @@ class Locator
 
     /**
      * Gets the Locator based on the app name defined in the GlobalId.
-     *
-     * @param GlobalId $globalId
-     * @return LocatorContract
      */
     private function locatorFor(GlobalId $globalId): LocatorContract
     {
-        return $this->locators[$this->normalizeApp($globalId->app())] ?? new BaseLocator();
+        return $this->locators[$this->normalizeApp($globalId->app())] ?? new BaseLocator;
     }
 
     /**
      * Determines if the model class can be located (based on the `only` option).
      *
-     * @param string $modelClass
-     * @param array $options
-     * @return bool
+     * @param  string  $modelClass
      */
     private function canFind($modelClass, array $options = []): bool
     {
@@ -147,9 +133,6 @@ class Locator
 
     /**
      * Normalizes the app name.
-     *
-     * @param string $app
-     * @return string
      */
     private function normalizeApp(string $app): string
     {
@@ -159,13 +142,13 @@ class Locator
     /**
      * Resolves the Locator instance.
      *
-     * @param LocatorContract|Closure|string $locator
+     * @param  LocatorContract|Closure|string  $locator
      * @return LocatorContract
      */
     private function resolve($locator)
     {
         if (is_null($locator)) {
-            return new BaseLocator();
+            return new BaseLocator;
         }
 
         $locator = value($locator);

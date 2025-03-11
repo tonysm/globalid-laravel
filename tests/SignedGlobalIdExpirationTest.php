@@ -11,9 +11,10 @@ use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 class SignedGlobalIdExpirationTest extends TestCase
 {
     private Person $model;
+
     private string $uri;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

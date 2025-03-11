@@ -34,29 +34,21 @@ class SignedGlobalId extends GlobalId
      * The expiration time resolver. When this exists, the closure will
      * be invoked every time a Signed Global Id is created (at least
      * for those where the `expires_at` is not specified as null).
-     *
-     * @var Closure|null
      */
     public static ?Closure $expiresInResolver = null;
 
     /**
      * The Verifier used to, well, verify the Signed Global Ids.
-     *
-     * @var Verifier
      */
     private Verifier $verifier;
 
     /**
      * The purpose of the Signed Global Id.
-     *
-     * @var string
      */
     private string $purpose;
 
     /**
      * The expiration date for th Signed Global Id.
-     *
-     * @var CarbonInterface|null
      */
     private ?CarbonInterface $expiresAt = null;
 
@@ -65,15 +57,12 @@ class SignedGlobalId extends GlobalId
      * have to hash it again on subsequent calls to the
      * `toString()` method.
      *
-     * @param string $cachedSgid
+     * @param  string  $cachedSgid
      */
     private string $cachedSgid;
 
     /**
      * Sets the expiration date resolver.
-     *
-     * @param Closure|null $expiresInResolver
-     * @return void
      */
     public static function useExpirationResolver(?Closure $expiresInResolver): void
     {
@@ -90,8 +79,7 @@ class SignedGlobalId extends GlobalId
      *  - `expires_at`: To define the expiration date for the Signed Global ID.
      *  - Anything else will be kept as param (query strings) in the GlobalId URI.
      *
-     * @param SignedGlobalId|string $gid
-     * @param array $options
+     * @param  SignedGlobalId|string  $gid
      * @return SignedGlobalId|null
      */
     public static function parse($gid, array $options = []): ?static
@@ -101,9 +89,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Picks the verifier from the options or returns the default one.
-     *
-     * @param array $options
-     * @return Verifier
      */
     private static function pickVerifier(array $options = []): Verifier
     {
@@ -140,9 +125,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Picks the purpose from the options array or returns the default one.
-     *
-     * @param array $options
-     * @return string
      */
     private static function pickPurpose(array $options = []): string
     {
@@ -151,8 +133,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Returns the expires in instance. Either the default one or using the resolver.
-     *
-     * @return CarbonInterface|null
      */
     private static function expiresIn(): ?CarbonInterface
     {
@@ -166,8 +146,7 @@ class SignedGlobalId extends GlobalId
     /**
      * Verifies the Signed Global Id.
      *
-     * @param SignedGlobalId|string $sgid
-     * @param array $options
+     * @param  SignedGlobalId|string  $sgid
      * @return string|null Returns the GID URI when it's verified, or null when it cannot be verified.
      */
     private static function verify($sgid, array $options = [])
@@ -178,7 +157,7 @@ class SignedGlobalId extends GlobalId
             );
 
             throw_if(static::hasExpired($metadata['expires_at']), SignedGlobalIdException::expired());
-        } catch (SignedGlobalIdException | InvalidSignatureException) {
+        } catch (SignedGlobalIdException|InvalidSignatureException) {
             return null;
         }
 
@@ -193,7 +172,6 @@ class SignedGlobalId extends GlobalId
      * Determines if the Signed Global Id has expired.
      *
      * @param string|CarbonInterface|null
-     * @return bool
      */
     private static function hasExpired($expiredAt): bool
     {
@@ -207,8 +185,7 @@ class SignedGlobalId extends GlobalId
     /**
      * Creates an instance of the Signed Global Id.
      *
-     * @param SignedGlobalId|string $gid
-     * @param array $options
+     * @param  SignedGlobalId|string  $gid
      */
     public function __construct($gid, array $options = [])
     {
@@ -221,9 +198,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Picks the expiration out of the options array, or returns the default one.
-     *
-     * @param array $options
-     * @return CarbonInterface|null
      */
     public function pickExpiration(array $options = []): ?CarbonInterface
     {
@@ -236,8 +210,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Returns the Signed Global Id string.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -246,8 +218,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Returns the Signed Global Id string.
-     *
-     * @return string
      */
     public function toParam(): string
     {
@@ -256,9 +226,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Checks if two Signed Global Ids can be considered equals. Can also receive an instance of the GlobalId class.
-     *
-     * @param GlobalId $globalId
-     * @return bool
      */
     public function equalsTo(GlobalId $globalId): bool
     {
@@ -271,8 +238,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Returns the expiration date Carbon instance when set, or null.
-     *
-     * @return CarbonInterface|null
      */
     public function expiresAt(): ?CarbonInterface
     {
@@ -281,8 +246,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Returns the array of params to be encoded in the SGID.
-     *
-     * @return array
      */
     private function toArray(): array
     {
@@ -295,8 +258,6 @@ class SignedGlobalId extends GlobalId
 
     /**
      * Encodes the expiration date to string.
-     *
-     * @return string|null
      */
     private function encodedExpiration(): ?string
     {

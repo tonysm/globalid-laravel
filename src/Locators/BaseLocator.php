@@ -12,7 +12,6 @@ class BaseLocator implements LocatorContract
     /**
      * Locates the entity the GlobalId refers to.
      *
-     * @param GlobalId $globalId
      * @return mixed
      */
     public function locate(GlobalId $globalId)
@@ -28,9 +27,6 @@ class BaseLocator implements LocatorContract
      * The options can be:
      *  - `ignore_missing` Which should be a boolean that indicates if missing references are allowed or if it should throw an exception.
      *
-     * @param Collection $globalIds
-     * @param array $options
-     * @return Collection
      * @throws LocatorException
      */
     public function locateMany(Collection $globalIds, array $options = []): Collection

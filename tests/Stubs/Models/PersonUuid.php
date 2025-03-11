@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PersonUuid extends Model
 {
-    protected $table = "uuid_people";
+    protected $table = 'uuid_people';
 
     protected $guarded = [];
 

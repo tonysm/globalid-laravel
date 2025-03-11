@@ -6,9 +6,7 @@ class NonModelPerson
 {
     public const MISSING_PERSON_ID = 100;
 
-    public function __construct(private $id)
-    {
-    }
+    public function __construct(private $id) {}
 
     public function getKey()
     {

@@ -8,7 +8,7 @@ use Tonysm\GlobalId\Tests\Stubs\Models\Person;
 
 class SignedGlobalIdCustomParamsTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
