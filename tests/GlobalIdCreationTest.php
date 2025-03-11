@@ -13,11 +13,14 @@ use Tonysm\GlobalId\Tests\Stubs\NonModelPerson;
 class GlobalIdCreationTest extends TestCase
 {
     private string $uuid;
+
     private GlobalId $personGid;
+
     private GlobalId $uuidPersonGid;
+
     private GlobalId $nonModelPersonGid;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -73,10 +76,10 @@ class GlobalIdCreationTest extends TestCase
     #[Test]
     public function to_string()
     {
-        $this->assertEquals('gid://laravel/'.urlencode(Person::class). '/1', $this->personGid->toString());
-        $this->assertEquals('gid://laravel/'.urlencode(Person::class). '/1', (string) $this->personGid->toString());
-        $this->assertEquals('gid://laravel/'.urlencode(PersonUuid::class). '/' . $this->uuid, $this->uuidPersonGid->toString());
-        $this->assertEquals('gid://laravel/'.urlencode(PersonUuid::class). '/' . $this->uuid, (string) $this->uuidPersonGid->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(Person::class).'/1', $this->personGid->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(Person::class).'/1', (string) $this->personGid->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(PersonUuid::class).'/'.$this->uuid, $this->uuidPersonGid->toString());
+        $this->assertEquals('gid://laravel/'.urlencode(PersonUuid::class).'/'.$this->uuid, (string) $this->uuidPersonGid->toString());
     }
 
     #[Test]

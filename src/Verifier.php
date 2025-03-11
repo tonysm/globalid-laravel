@@ -9,26 +9,19 @@ class Verifier
 {
     /**
      * The cached key. We cache it so subsequent signing calls don't have to recompute the key.
-     *
-     * @var string
      */
     private string $cachedKey;
 
     /**
      * Creates an instance of the Verifier class.
-     *
-     * @param Closure $keyResolver
-     * @param string $salt
      */
-    public function __construct(private Closure $keyResolver, private string $salt)
-    {
-    }
+    public function __construct(private Closure $keyResolver, private string $salt) {}
 
     /**
      * Verifies the Signed Global Id string matches with the signature.
      *
-     * @param string $sgid
      * @return array Returns the signed global Id attributes when the verification works, otherwise it throws an exception.
+     *
      * @throws InvalidSignatureException
      */
     public function verify(string $sgid): array
@@ -36,15 +29,15 @@ class Verifier
         $split = explode('--', $sgid);
 
         if (count($split) !== 2) {
-            throw new InvalidSignatureException();
+            throw new InvalidSignatureException;
         }
 
-        list($encoded, $signature) = $split;
+        [$encoded, $signature] = $split;
 
         $rehased = $this->hash($encoded);
 
         if ($rehased !== $signature) {
-            throw new InvalidSignatureException();
+            throw new InvalidSignatureException;
         }
 
         return json_decode(base64_decode($encoded), true);
@@ -53,8 +46,7 @@ class Verifier
     /**
      * Encodes the Signed Global Id attributes and appends the signature to it.
      *
-     * @param array $data
-     * @return string
+     * @param  array  $data
      */
     public function generate($data): string
     {
@@ -67,19 +59,14 @@ class Verifier
 
     /**
      * Generates the signature of an encoded string.
-     *
-     * @param string $encoded
-     * @return string
      */
     private function hash(string $encoded): string
     {
-        return hash_hmac('sha256', $encoded, $this->key() . $this->salt);
+        return hash_hmac('sha256', $encoded, $this->key().$this->salt);
     }
 
     /**
      * Gets the key used to sign the data.
-     *
-     * @return string
      */
     private function key(): string
     {

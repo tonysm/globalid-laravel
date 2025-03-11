@@ -24,8 +24,8 @@ class GID
     /**
      * Parses a global ID URI string and creates an instance of the GID class.
      *
-     * @param string|null $gid
-     * @return GID
+     * @param  string|null  $gid
+     *
      * @throws GIDParsingException
      */
     public static function parse($gid): self
@@ -36,7 +36,7 @@ class GID
 
         $parsed = parse_url($gid);
 
-        if (false === $parsed || ! isset($parsed['scheme']) || $parsed['scheme'] !== static::SCHEME) {
+        if ($parsed === false || ! isset($parsed['scheme']) || $parsed['scheme'] !== static::SCHEME) {
             throw GIDParsingException::badUri();
         }
 
@@ -74,9 +74,6 @@ class GID
 
     /**
      * Checks if the app name is valid.
-     *
-     * @param string $app
-     * @return string
      */
     public static function validateAppName(string $app): string
     {
@@ -86,10 +83,7 @@ class GID
     /**
      * Creates an instance of the GID class for a specific model.
      *
-     * @param string $app
-     * @param Model $model
-     * @param array $params
-     * @return GID
+     * @param  Model  $model
      */
     public static function create(string $app, $model, array $params = []): self
     {
@@ -103,8 +97,7 @@ class GID
     /**
      * Creates an instance of the GID class based on an array of arguments.
      *
-     * @param array $args
-     * @return self
+     * @param  array  $args
      */
     public static function build($args): self
     {
@@ -119,9 +112,6 @@ class GID
     /**
      * Encodes the query strings (params) to be added to the GID URI.
      * We're not supporting multi value params.
-     *
-     * @param array $params
-     * @return array
      */
     protected static function encodeWwwParams(array $params = []): array
     {
@@ -138,25 +128,16 @@ class GID
 
     /**
      * Creates an instance of the GID class.
-     *
-     * @param string $app
-     * @param string $modelName
-     * @param string $modelId
-     * @param array $params
      */
     public function __construct(
         public string $app,
         public string $modelName,
         public string $modelId,
         public array $params = [],
-    ) {
-    }
+    ) {}
 
     /**
      * Determines if two instances of the GID class can be considered the same.
-     *
-     * @param GID $gid
-     * @return bool
      */
     public function equalsTo(GID $gid): bool
     {
@@ -166,7 +147,7 @@ class GID
     /**
      * Gets a specific query string (param) from the URI.
      *
-     * @param string $key
+     * @param  string  $key
      * @return string|null
      */
     public function getParam($key)
@@ -176,8 +157,6 @@ class GID
 
     /**
      * Converts the GID to a URI string.
-     *
-     * @return string
      */
     public function toString(): string
     {
@@ -192,8 +171,6 @@ class GID
 
     /**
      * Converts the GID to a URI string.
-     *
-     * @return string
      */
     public function __toString(): string
     {

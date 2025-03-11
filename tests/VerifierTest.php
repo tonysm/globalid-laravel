@@ -9,7 +9,7 @@ class VerifierTest extends TestCase
 {
     private Verifier $verifier;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

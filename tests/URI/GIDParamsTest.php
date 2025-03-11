@@ -11,11 +11,11 @@ class GIDParamsTest extends TestCase
 {
     private GID $gid;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $model = (new Person())->forceFill(['id' => 5]);
+        $model = (new Person)->forceFill(['id' => 5]);
         $this->gid = GID::create('laravel', $model, ['hello' => 'world']);
     }
 

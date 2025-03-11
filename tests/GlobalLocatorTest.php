@@ -21,10 +21,12 @@ use Tonysm\GlobalId\Tests\Stubs\NonModelPerson;
 class GlobalLocatorTest extends TestCase
 {
     private Person $model;
+
     private GlobalId $gid;
+
     private SignedGlobalId $sgid;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -334,7 +336,8 @@ class GlobalLocatorTest extends TestCase
     #[Test]
     public function use_locator()
     {
-        Locator::use('foo', new class () implements LocatorContract {
+        Locator::use('foo', new class implements LocatorContract
+        {
             public function locate(GlobalId $globalId)
             {
                 return 'mocked';
@@ -355,7 +358,8 @@ class GlobalLocatorTest extends TestCase
     #[Test]
     public function use_locator_app_is_case_insensitive()
     {
-        Locator::use('foo', new class () implements LocatorContract {
+        Locator::use('foo', new class implements LocatorContract
+        {
             public function locate(GlobalId $globalId)
             {
                 return 'mocked';
@@ -378,7 +382,8 @@ class GlobalLocatorTest extends TestCase
     {
         $this->expectException(GlobalIdException::class);
 
-        Locator::use('foo_lorem', new class () implements LocatorContract {
+        Locator::use('foo_lorem', new class implements LocatorContract
+        {
             public function locate(GlobalId $globalId)
             {
                 return 'mocked';
