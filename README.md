@@ -1,15 +1,9 @@
 <p align="center" style="margin-top: 2rem; margin-bottom: 2rem;"><img src="/art/globalids-laravel-logo.svg" alt="GlobalIds Laravel" /></p>
 
 <p align="center">
-    <a href="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg">
-        <img src="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg" />
-    </a>
-    <a href="https://packagist.org/packages/tonysm/globalid-laravel">
-        <img src="https://img.shields.io/packagist/dt/tonysm/globalid-laravel" alt="Total Downloads">
-    </a>
-    <a href="https://packagist.org/packages/tonysm/globalid-laravel">
-        <img src="https://img.shields.io/github/license/tonysm/globalid-laravel" alt="License">
-    </a>
+    <a href="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg"><img src="https://github.com/tonysm/globalid-laravel/workflows/run-tests/badge.svg" /></a>
+    <a href="https://packagist.org/packages/tonysm/globalid-laravel"><img src="https://img.shields.io/packagist/dt/tonysm/globalid-laravel" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/tonysm/globalid-laravel"><img src="https://img.shields.io/github/license/tonysm/globalid-laravel" alt="License"></a>
 </p>
 
 # Introduction
@@ -194,6 +188,7 @@ Tonysm\GlobalId\Facades\Locator::locateMany($gids);
 Note the order is maintained in the returned results.
 
 ### Custom App Locator
+
 <a name="custom-locators"></a>
 
 A custom locator can be set for an app by calling `Tonysm\GlobalId\Locator::use()` and providing an app locator to use for that app. A custom app locator is useful when different apps collaborate and reference each others' Global IDs. When finding a Global ID's model, the locator to use is based on the app name provided in the Global ID url.
