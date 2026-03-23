@@ -5,6 +5,7 @@ namespace Tonysm\GlobalId;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Tonysm\GlobalId\Exceptions\GlobalIdException;
+use Tonysm\GlobalId\Exceptions\LocatorException;
 use Tonysm\GlobalId\Locators\BaseLocator;
 use Tonysm\GlobalId\Locators\LocatorContract;
 use Tonysm\GlobalId\URI\GID;
@@ -111,7 +112,17 @@ class Locator
      */
     private function locatorFor(GlobalId $globalId): LocatorContract
     {
-        return $this->locators[$this->normalizeApp($globalId->app())] ?? new BaseLocator;
+        $app = $this->normalizeApp($globalId->app());
+
+        if (isset($this->locators[$app])) {
+            return $this->locators[$app];
+        }
+
+        if ($app === $this->normalizeApp(GlobalId::appName())) {
+            return new BaseLocator;
+        }
+
+        throw LocatorException::unknownApp($globalId->app());
     }
 
     /**
