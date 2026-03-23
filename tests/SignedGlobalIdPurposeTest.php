@@ -26,7 +26,7 @@ class SignedGlobalIdPurposeTest extends TestCase
     #[Test]
     public function sign_with_purpose_when_for_is_provided()
     {
-        $this->assertEquals('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzEiLCJwdXJwb3NlIjoibG9naW4iLCJleHBpcmVzX2F0IjoiMjAyMS0xMC0yMVQxODowNzo0NVoifQ==--2608dcd66dd87acc6f20b44a399ab07672ea2a0be804ab6313ba8bb8c2a4bf0c', $this->loginSgid->toString());
+        $this->assertEquals('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzEiLCJwdXJwb3NlIjoibG9naW4iLCJleHBpcmVzX2F0IjoiMjAyMS0xMC0yMVQxODowNzo0NVoifQ==--abbe97b9ea7d9402b1dae20a2a0d7dc47f66fd534eb14ee8c2981302677aafad', $this->loginSgid->toString());
     }
 
     #[Test]

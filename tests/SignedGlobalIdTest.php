@@ -26,7 +26,7 @@ class SignedGlobalIdTest extends TestCase
     #[Test]
     public function to_string()
     {
-        $this->assertEquals('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzEiLCJwdXJwb3NlIjoiZGVmYXVsdCIsImV4cGlyZXNfYXQiOiIyMDIxLTEwLTIxVDE4OjA3OjQ1WiJ9--03906479811fcd37fc53deff414f525cd7cd94d844b0cb6d6e547e5a2d912740', $this->personSgid->toString());
+        $this->assertEquals('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzEiLCJwdXJwb3NlIjoiZGVmYXVsdCIsImV4cGlyZXNfYXQiOiIyMDIxLTEwLTIxVDE4OjA3OjQ1WiJ9--e3c5048a34f3f57d7efd86b8db8a24f44489841cf69289b00938aea2379a7f48', $this->personSgid->toString());
     }
 
     #[Test]
