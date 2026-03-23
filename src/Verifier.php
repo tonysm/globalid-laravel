@@ -13,9 +13,14 @@ class Verifier
     private string $cachedKey;
 
     /**
+     * The cached previous keys. Resolved lazily only when the current key fails verification.
+     */
+    private ?array $cachedPreviousKeys = null;
+
+    /**
      * Creates an instance of the Verifier class.
      */
-    public function __construct(private Closure $keyResolver, private string $salt) {}
+    public function __construct(private Closure $keyResolver, private string $salt, private ?Closure $previousKeysResolver = null) {}
 
     /**
      * Verifies the Signed Global Id string matches with the signature.
@@ -34,13 +39,17 @@ class Verifier
 
         [$encoded, $signature] = $split;
 
-        $rehased = $this->hash($encoded);
-
-        if ($rehased !== $signature) {
-            throw new InvalidSignatureException;
+        if ($this->hashWithKey($encoded, $this->key()) === $signature) {
+            return json_decode(base64_decode($encoded), true);
         }
 
-        return json_decode(base64_decode($encoded), true);
+        foreach ($this->previousKeys() as $previousKey) {
+            if ($this->hashWithKey($encoded, $previousKey) === $signature) {
+                return json_decode(base64_decode($encoded), true);
+            }
+        }
+
+        throw new InvalidSignatureException;
     }
 
     /**
@@ -58,11 +67,19 @@ class Verifier
     }
 
     /**
-     * Generates the signature of an encoded string.
+     * Generates the signature of an encoded string using a specific key.
+     */
+    private function hashWithKey(string $encoded, string $key): string
+    {
+        return hash_hmac('sha256', $encoded, $key.$this->salt);
+    }
+
+    /**
+     * Generates the signature of an encoded string using the current key.
      */
     private function hash(string $encoded): string
     {
-        return hash_hmac('sha256', $encoded, $this->key().$this->salt);
+        return $this->hashWithKey($encoded, $this->key());
     }
 
     /**
@@ -71,5 +88,19 @@ class Verifier
     private function key(): string
     {
         return $this->cachedKey ??= call_user_func($this->keyResolver);
+    }
+
+    /**
+     * Gets the previous keys used for verification fallback.
+     *
+     * @return string[]
+     */
+    private function previousKeys(): array
+    {
+        if ($this->previousKeysResolver === null) {
+            return [];
+        }
+
+        return $this->cachedPreviousKeys ??= call_user_func($this->previousKeysResolver);
     }
 }
