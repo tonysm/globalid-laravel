@@ -39,12 +39,12 @@ class Verifier
 
         [$encoded, $signature] = $split;
 
-        if ($this->hashWithKey($encoded, $this->key()) === $signature) {
+        if ($this->signatureMatches($encoded, $signature, $this->key())) {
             return json_decode(base64_decode($encoded), true);
         }
 
         foreach ($this->previousKeys() as $previousKey) {
-            if ($this->hashWithKey($encoded, $previousKey) === $signature) {
+            if ($this->signatureMatches($encoded, $signature, $previousKey)) {
                 return json_decode(base64_decode($encoded), true);
             }
         }
@@ -64,6 +64,15 @@ class Verifier
         $signature = $this->hash($encoded);
 
         return "{$encoded}--{$signature}";
+    }
+
+    /**
+     * Checks if the given signature matches the expected HMAC for the encoded data.
+     * Uses hash_equals for constant-time comparison to prevent timing attacks.
+     */
+    private function signatureMatches(string $encoded, string $signature, string $key): bool
+    {
+        return hash_equals($this->hashWithKey($encoded, $key), $signature);
     }
 
     /**
