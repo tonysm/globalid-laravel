@@ -59,8 +59,8 @@ class SignedGlobalIdPurposeTest extends TestCase
     {
         $sgid = $this->loginSgid->toString();
 
-        $this->assertNull(SignedGlobalID::parse($sgid));
-        $this->assertNull(SignedGlobalID::parse($sgid, ['for' => 'like_button']));
+        $this->assertNull(SignedGlobalId::parse($sgid));
+        $this->assertNull(SignedGlobalId::parse($sgid, ['for' => 'like_button']));
     }
 
     #[Test]
