@@ -31,9 +31,9 @@ class GlobalId
      * Sets the default app name to be used when creating new
      * GlobalIds without specific app names.
      */
-    public static function useAppName(string $app): void
+    public static function useAppName(string $app): string
     {
-        static::$app = GID::validateAppName($app);
+        return static::$app = GID::validateAppName($app);
     }
 
     /**
@@ -43,11 +43,7 @@ class GlobalId
      */
     public static function appName(): string
     {
-        if (! static::$app ?? false) {
-            static::useAppName(Str::slug(config('globalid.app_name')));
-        }
-
-        return static::$app;
+        return static::$app ??= static::useAppName(Str::slug(config('globalid.app_name')));
     }
 
     /**

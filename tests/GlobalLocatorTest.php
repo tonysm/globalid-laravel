@@ -334,7 +334,31 @@ class GlobalLocatorTest extends TestCase
     }
 
     #[Test]
-    public function use_locator()
+    public function locating_gid_with_unknown_app_throws_exception()
+    {
+        $this->expectException(LocatorException::class);
+
+        Locator::locate('gid://unknown-app/Person/1');
+    }
+
+    #[Test]
+    public function locating_many_gids_with_unknown_app_throws_exception()
+    {
+        $this->expectException(LocatorException::class);
+
+        Locator::locateMany(['gid://unknown-app/Person/1']);
+    }
+
+    #[Test]
+    public function locating_gid_with_current_app_works_without_explicit_locator()
+    {
+        $found = Locator::locate($this->gid);
+
+        $this->assertTrue($this->model->is($found));
+    }
+
+    #[Test]
+    public function locating_gid_with_registered_app_works()
     {
         Locator::use('foo', new class implements LocatorContract
         {

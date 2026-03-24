@@ -106,21 +106,34 @@ class SignedGlobalId extends GlobalId
      */
     private static function configuredVerifier()
     {
-        return new Verifier(function () {
-            $appKey = config('app.key');
+        return new Verifier(
+            salt: 'signed_global_ids',
+            keyResolver: fn () => static::deriveKey(config('app.key')),
+            previousKeysResolver: function () {
+                return array_map(
+                    fn (string $key) => static::deriveKey($key),
+                    array_filter(config('app.previous_keys', [])),
+                );
+            },
+        );
+    }
 
-            if (str_starts_with($appKey, 'base64:')) {
-                $appKey = base64_decode(substr($appKey, 7));
-            }
+    /**
+     * Derives a signing key from a Laravel app key using PBKDF2.
+     */
+    private static function deriveKey(string $appKey): string
+    {
+        if (str_starts_with($appKey, 'base64:')) {
+            $appKey = base64_decode(substr($appKey, 7));
+        }
 
-            return hash_pbkdf2(
-                'sha256',
-                $appKey,
-                'signed_global_ids',
-                static::ITERATIONS,
-                static::KEY_SIZE,
-            );
-        }, salt: 'signed_global_ids');
+        return hash_pbkdf2(
+            'sha256',
+            $appKey,
+            'signed_global_ids',
+            static::ITERATIONS,
+            static::KEY_SIZE,
+        );
     }
 
     /**

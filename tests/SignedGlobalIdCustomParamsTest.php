@@ -25,7 +25,8 @@ class SignedGlobalIdCustomParamsTest extends TestCase
     #[Test]
     public function parse_custom_params()
     {
-        $sgid = SignedGlobalId::parse('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzE/aGVsbG89d29ybGQiLCJwdXJwb3NlIjoiZGVmYXVsdCIsImV4cGlyZXNfYXQiOiIyMDIxLTA5LTIxVDE4OjUxOjIwWiJ9--131a0c93a84f48a315c1bab0e310440bb9c2c24fe3bf285bf2fa92303d18bd49');
+        $sgid = SignedGlobalId::parse('eyJzZ2lkIjoiZ2lkOlwvXC9sYXJhdmVsXC9Ub255c20lNUNHbG9iYWxJZCU1Q1Rlc3RzJTVDU3R1YnMlNUNNb2RlbHMlNUNQZXJzb25cLzE/aGVsbG89d29ybGQiLCJwdXJwb3NlIjoiZGVmYXVsdCIsImV4cGlyZXNfYXQiOiIyMDIxLTA5LTIxVDE4OjUxOjIwWiJ9--692ce83526b900f93c5a50119919c28893a437327f7cb914a31eee6d9a025e0a');
+
         $this->assertEquals('world', $sgid->getParam('hello'));
     }
 }
